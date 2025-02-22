@@ -29,9 +29,7 @@ export async function bootstrap() {
 export async function mount(props: any) {
   props.onGlobalStateChange((state: any) => {
     console.log("子应用接收的参数", state.name);
-    // state.publicPath && window.localStorage.setItem("curApp", state.name);
   }, true);
-  // props.setGlobalState({ count: 2 });
   render(props);
 }
 

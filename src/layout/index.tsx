@@ -2,24 +2,19 @@ import { Tabs, TabsProps } from "antd";
 import React from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { clearToken } from "../tools/auth";
+import "../assets/css/layout.css"
+
+import { Color } from "antd/es/color-picker";
 export default function Layout() {
   const navigator = useNavigate();
   const items: TabsProps["items"] = [
     {
-      key: "itv",
-      label: "图片转视频",
+      key: "tti",
+      label: "文本转图片",
     },
     {
-      key: "ttv",
-      label: "文本转视频",
-    },
-    {
-      key: "community",
-      label: "社区列表页面",
-    },
-    {
-      key: "user",
-      label: "用户列表页面",
+      key: "iti",
+      label: "图片转图片",
     },
     {
       key: "login",
@@ -49,6 +44,7 @@ export default function Layout() {
             onChange={(value) => {
               handleChangeRoute(value);
             }}
+
           />
         </div>
         <div

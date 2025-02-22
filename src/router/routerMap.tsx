@@ -3,10 +3,8 @@ import Login from "../pages/login";
 import Layout from "../layout/index";
 import PrivateRoute from "./privateRoute";
 
-import ImgToVideo from "../pages/ImgToVideo";
-import TxtToVideo from "../pages/TxtToVideo";
-import User from "../pages/User";
-import Community from "../pages/Community";
+import ITI from "../pages/ITI";
+import TTI from "../pages/TTI";
 
 export const routerMap = [
   {
@@ -16,7 +14,7 @@ export const routerMap = [
   {
     path: "*",
     element: <Navigate to="/login" />,
-  }, //其他没有被注册过的路径统一重定位到login
+  },
   {
     path: "/",
     element: (
@@ -26,20 +24,12 @@ export const routerMap = [
     ),
     children: [
       {
-        path: "/itv",
-        element: <ImgToVideo />,
+        path: "/iti",
+        element: <ITI />,
       },
       {
-        path: "/ttv",
-        element: <TxtToVideo />,
-      },
-      {
-        path: "/user",
-        element: <User />,
-      },
-      {
-        path: "/community",
-        element: <Community />,
+        path: "/tti",
+        element: <TTI />,
       },
     ],
   },
