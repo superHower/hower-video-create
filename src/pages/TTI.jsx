@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form, Input, Button, Row, Col } from 'antd';
 import VideoUploader from '../components/VideoUploader';
 import VideoPlayer from '../components/VideoPlayer';
-import { API_URL, getDuration, getFileName } from '../utils/inedx';
 import { post } from '../utils/request';
+
 const TTI = () => {
-  const [videoUrl, setVideoUrl] = useState<string | null>(null);
-  const handleData = (data) => {
-    console.log("输出", data.name)
-    setVideoUrl(data.url);
+  const [videoData, setVideoData] = useState(null);
+  const [coverBase64, setCoverBase64] = useState(null);
+
+  const handleData = async(data) => {
+    setVideoData(data);
   };
 
   // 模拟AI生成视频请求
@@ -16,16 +17,25 @@ const TTI = () => {
     let url = null
     const response = await post('/admin/video', {
       title: null,
-      description: null,
       videoUrl: url,
-      coverUrl: null,
-      duration: null,
-      fileSize: null,
       tags: 1,
       status: 2
     })
   };
-
+  useEffect(() => {
+    if (videoData?.videoUrl && coverBase64) {
+      const submitData = async () => {
+        await post('/admin/video', {
+          ...videoData,
+          videoUrl: videoData?.videoUrl,
+          coverUrl: coverBase64,
+          tags: 0,
+          status:0
+        });
+      };
+      submitData();
+    }
+  }, [videoData?.videoUrl, coverBase64]);
   return (
     <>
   <Row gutter={16}>
@@ -44,7 +54,15 @@ const TTI = () => {
         height: '70vh',
         padding: 16 
       }}>
-        {videoUrl && <VideoPlayer src={videoUrl} options={{}} className="video-player" style={{ width: '100%', height: '100%' }} />}
+        {videoData?.videoUrl && (
+          <VideoPlayer 
+            src={videoData?.videoUrl} 
+            onFirstFrame={setCoverBase64} 
+            options={{}} 
+            className="video-player" 
+            style={{ width: '100%', height: '100%' }} 
+          />
+        )}
       </div>
     </Col>
   </Row>

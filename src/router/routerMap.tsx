@@ -6,15 +6,12 @@ import PrivateRoute from "./privateRoute";
 import ITI from "../pages/ITI";
 import TTI from "../pages/TTI";
 import MyWork from "../pages/MyWork";
+import Play from "../pages/play";
 
 export const routerMap = [
   {
     path: "/login",
     element: <Login />,
-  },
-  {
-    path: "*",
-    element: <Navigate to="/login" />,
   },
   {
     path: "/",
@@ -29,6 +26,10 @@ export const routerMap = [
         element: <MyWork />,
       },
       {
+        path: "/play",
+        element: <Play />,
+      },
+      {
         path: "/tti",
         element: <TTI />,
       },
@@ -41,6 +42,10 @@ export const routerMap = [
         element: <ITI />,
       },
     ],
+  },
+  {
+    path: "*",
+    element: <Navigate to="/login" />,
   },
 
 ];

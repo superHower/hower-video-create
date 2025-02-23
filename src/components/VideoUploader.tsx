@@ -9,7 +9,7 @@ interface UploadState {
   uploadProgress: number;
 }
 interface VideoUploaderProps {
-  onSendData: (data: { name: string; videoUrl: string, duration: number,size: number }) => void;
+  onSendData: (data: { title: string; videoUrl: string, duration: number,size: number }) => void;
 }
 const VideoUploader: React.FC<VideoUploaderProps> = ({ onSendData }) => {
   const [state, setState] = useState<UploadState>({
@@ -46,7 +46,7 @@ const VideoUploader: React.FC<VideoUploaderProps> = ({ onSendData }) => {
           onSuccess(result, file);
           onSendData({
             videoUrl,
-            name: getFileName(file.name),
+            title: getFileName(file.name),
             duration,
             size:file.size
           });

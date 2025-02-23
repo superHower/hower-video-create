@@ -8,7 +8,8 @@ const VideoPlayer = ({
   src,
   options,
   className,
-  style
+  style,
+  onFirstFrame
 }) => {
   const videoRef = useRef(null);
   const playerRef = useRef();
@@ -17,7 +18,6 @@ const VideoPlayer = ({
   useEffect(() => {
     if (!videoRef.current) return;
 
-    // 合并默认配置和自定义配置
     const mergedOptions = {
       controls: true,
       responsive: true,
@@ -27,18 +27,44 @@ const VideoPlayer = ({
       ...options
     };
 
-    // 创建播放器实例
     playerRef.current = videojs(videoRef.current, mergedOptions, () => {
-      console.log('Player is ready');
+      const player = playerRef.current;
+
+      // 监听元数据加载完成事件
+      const handleLoadedMetadata = () => {
+        // 设置当前时间为0确保获取第一帧
+        player.currentTime(0);
+        
+        // 监听跳转完成事件
+        player.one('seeked', () => {
+          const videoElement = player.el().querySelector('video');
+          if (!videoElement) return;
+
+          // 创建画布
+          const canvas = document.createElement('canvas');
+          canvas.width = videoElement.videoWidth;
+          canvas.height = videoElement.videoHeight;
+          const ctx = canvas.getContext('2d');
+          
+          if (!ctx) return;
+
+          try {
+            // 绘制视频帧到画布
+            ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+            const base64 = canvas.toDataURL('image/jpeg', 0.8);
+            
+            // 调用回调函数传递Base64
+            onFirstFrame?.(base64);
+          } catch (error) {
+            console.error('Error capturing frame:', error);
+          }
+        });
+      };
+
+      player.on('loadedmetadata', handleLoadedMetadata);
     });
 
-    // 单独处理字符串类型的 src
-    if (typeof src === 'string') {
-      playerRef.current.src(src);
-    }
-
     return () => {
-      // 销毁播放器
       if (playerRef.current) {
         playerRef.current.dispose();
       }
@@ -49,7 +75,7 @@ const VideoPlayer = ({
   useEffect(() => {
     if (playerRef.current) {
       if (typeof src === 'string') {
-        playerRef.current.src(src);
+        playerRef.current.src({ src, type: 'video/mp4' });
       } else {
         playerRef.current.src(src);
       }
@@ -59,29 +85,18 @@ const VideoPlayer = ({
   return (
     <Card
       className={className}
-      style={{
-        padding: '10px',
-        borderRadius: '8px',
-        ...style
-      }}
-      styles={{
-        body: {
-          padding: 0
-        }
-      }}
+      style={{ padding: '10px', borderRadius: '8px', ...style }}
+      styles={{ body: { padding: 0 } }}
     >
       <div data-vjs-player>
         <video
           ref={videoRef}
           className="video-js vjs-big-play-centered"
-          style={{
-            borderRadius: '6px',
-            overflow: 'hidden'
-          }}
+          crossOrigin="anonymous" // 重要：处理跨域问题
+          style={{ borderRadius: '6px', overflow: 'hidden' }}
         />
       </div>
     </Card>
   );
 };
-
 export default VideoPlayer;
