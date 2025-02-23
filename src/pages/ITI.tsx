@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form, Button } from 'antd';
-import ImageUploader from '../components/upload/ImageUploader';
+import ImageUploader from '../components/ImageUploader';
 
 const ITI =() => {
   const [form] = Form.useForm();

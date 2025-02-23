@@ -1,20 +1,33 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
+import { API_URL } from './inedx';
+import { useNavigate } from 'react-router-dom';
 
 // 创建一个 axios 实例
 const instance: AxiosInstance = axios.create({
-  baseURL: 'http://localhost:9000/api/v1', // 根据实际情况设置基础 URL
+  baseURL: API_URL + '/api/v1', // 根据实际情况设置基础 URL
   timeout: 10000, // 请求超时时间
 });
+
+// 自定义一个导航函数
+let navigate: ReturnType<typeof useNavigate>;
+export const setNavigate = (nav: ReturnType<typeof useNavigate>) => {
+  navigate = nav;
+};
 
 // 请求拦截器
 instance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    // 在发送请求之前做些什么，例如添加 token
-    // config.headers.Authorization = `Bearer ${localStorage.getItem('token')}`;
+    const token = JSON.parse(localStorage.getItem('app')).globalToken;
+    if (token) {
+      config.headers.Token = token;
+    } else {
+      if (navigate) 
+        navigate('/login');
+      return Promise.reject(new Error('未找到 token，跳转到登录页面'));
+    }
     return config;
   },
   (error) => {
-    // 对请求错误做些什么
     return Promise.reject(error);
   }
 );

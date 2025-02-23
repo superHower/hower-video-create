@@ -2,7 +2,7 @@ import { Upload, message, UploadProps, Image } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { useState, useEffect } from 'react';
 import type { UploadFile, UploadFileStatus } from 'antd/es/upload/interface';
-import { post } from '../../utils/request';
+import { post } from '../utils/request';
 interface ImageUploaderProps {
   accept?: string;
   maxSize?: number; // 单位 MB

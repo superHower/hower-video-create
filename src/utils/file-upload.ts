@@ -11,6 +11,7 @@ interface IUploadFileRes {
   success: boolean;
   filePath?: string;
   message?: string;
+  exit?: boolean;
 }
 
 /** 
@@ -106,7 +107,7 @@ async function handleUploadProcess(
   try {
     const res = await post<IApiRes>('/upload/verify', {fileHash,totalCount: chunks.length,extname});
     if (res.code === 'FILE_EXIST') {
-      return { success: true, filePath: res.data.filePath };
+      return { success: true, filePath: res.data.filePath, exit: true };
     } else if (res.code === 'ALL_CHUNK_UPLOAD') {
       return await mergeFile(fileHash, extname);
     } else if (res.code === 'SUCCESS') {

@@ -1,15 +1,17 @@
 import { Upload, Button, Progress, message } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import { uploadFile } from '../../utils/file-upload'
+import { uploadFile } from '../utils/file-upload'
 import { useState } from 'react';
-
+import { API_URL, getDuration, getFileName } from '../utils/inedx';
 interface UploadState {
   fileList: any[];
   uploading: boolean;
   uploadProgress: number;
 }
-
-const VideoUploader = () => {
+interface VideoUploaderProps {
+  onSendData: (data: { name: string; videoUrl: string, duration: number,size: number }) => void;
+}
+const VideoUploader: React.FC<VideoUploaderProps> = ({ onSendData }) => {
   const [state, setState] = useState<UploadState>({
     fileList: [],
     uploading: false,
@@ -35,8 +37,21 @@ const VideoUploader = () => {
       );
 
       if (result.success) {
-        message.success(`${file.name} 上传成功`);
-        onSuccess(result, file);
+        if(result.exit){
+          message.warning(`${file.name} 已存在`)
+        }else {
+          let videoUrl = API_URL + result.filePath
+          const duration = await getDuration(file);          
+
+          onSuccess(result, file);
+          onSendData({
+            videoUrl,
+            name: getFileName(file.name),
+            duration,
+            size:file.size
+          });
+          message.success(`${file.name} 上传成功`)
+        }
       } else {
         message.error(result.message || '上传失败');
         onError(new Error(result.message));

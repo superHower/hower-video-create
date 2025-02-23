@@ -5,6 +5,7 @@ import PrivateRoute from "./privateRoute";
 
 import ITI from "../pages/ITI";
 import TTI from "../pages/TTI";
+import MyWork from "../pages/MyWork";
 
 export const routerMap = [
   {
@@ -24,12 +25,20 @@ export const routerMap = [
     ),
     children: [
       {
-        path: "/iti",
-        element: <ITI />,
+        path: "/my",
+        element: <MyWork />,
       },
       {
         path: "/tti",
         element: <TTI />,
+      },
+      {
+        path: "/ttv",
+        element: <ITI />,
+      },
+      {
+        path: "/itv",
+        element: <ITI />,
       },
     ],
   },

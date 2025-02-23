@@ -1,3 +1,20 @@
-:where(.css-dev-only-do-not-override-161f05s).ant-tabs .ant-tabs-tab {
-  color: white;
+.layout-container {
+  min-height: 100vh;
+}
+
+.ant-layout-header {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1;
+
+
+}
+.layout-header   { 
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  padding: 0 24px;
+  box-shadow: 0 2px 8px #f0f1f2;
 }
