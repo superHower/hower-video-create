@@ -13,7 +13,7 @@ const MyWork = () => {
   const getVideoList = async () => {
     try {
       const response: any = await get('/admin/video');
-      setVideoList(response); 
+      setVideoList(response.data); 
     } catch (error) {
       console.error('获取视频列表失败:', error);
     } finally {

@@ -46,7 +46,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
         },
       });
       console.log("输出", data)
-      onSuccess?.(data);
+      onSuccess?.(data.data);
     } catch (error) {
       onError?.(error as Error);
       message.error('上传失败，请重试');

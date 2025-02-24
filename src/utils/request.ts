@@ -7,11 +7,29 @@ const instance: AxiosInstance = axios.create({
   baseURL: API_URL + '/api/v1', // 根据实际情况设置基础 URL
   timeout: 10000, // 请求超时时间
 });
+  const whiteList = [
+    /^\/admin\/login$/, 
+    /^\/admin\/captcha(\?.*)?$/
+  ];
 
+  function isWhiteListPath(path: string): boolean {
+    return whiteList.some(rule => {
+      if (rule instanceof RegExp) {
+        return rule.test(path);
+      }
+      return path === rule;
+    });
+  }
 // 请求拦截器
 instance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const token = JSON.parse(localStorage.getItem('app')).globalToken;
+    if (config.url && isWhiteListPath(config.url)) {
+      return config;
+    }
+
+    let localUser = localStorage.getItem('user');
+    let u = localUser ? localUser : JSON.stringify({ token: '' });
+    const token = JSON.parse(u).token;
     if (token) {
       config.headers.Token = token;
     } else {
@@ -52,23 +70,24 @@ instance.interceptors.response.use(
 // 通用的 GET 请求方法
 export const get = async <T>(url: string, config?: AxiosRequestConfig): Promise<T> => {
   const response: any = await instance.get<T>(url, config);
-  return response.result.data;
+
+  return response.result;
 };
 
 // 通用的 POST 请求方法
 export const post = async <T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> => {
   const response: any = await instance.post<T>(url, data, config);
-  return response.result.data;
+  return response.result;
 };
 
 // 通用的 PUT 请求方法
 export const put = async <T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> => {
   const response: any = await instance.put<T>(url, data, config);
-  return response.result.data;
+  return response.result;
 };
 
 // 通用的 DELETE 请求方法
 export const del = async <T>(url: string, config?: AxiosRequestConfig): Promise<T> => {
   const response: any = await instance.delete<T>(url, config);
-  return response.result.data;
+  return response.result;
 };
