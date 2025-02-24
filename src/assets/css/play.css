@@ -1,23 +1,122 @@
-.video-card {
-  transition: all 0.3s ease;
+.container {
+  display: flex;
+  gap: 30px;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.left-panel {
+  flex: 3;
+}
+
+.right-panel {
+  flex: 2;
+}
+
+.video-container {
+  background: #fff;
+  padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
-.hover:shadow-lg {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+
+.video-title {
+  font-size: 24px;
+  margin-bottom: 15px;
+  color: #333;
 }
-.video-info {
-  padding: 15px;
-  background-color: rgba(249, 249, 249, 0.9);
-  border-radius: 8px;
-  margin-top: 10px;
+
+.video-wrapper {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 */
+  height: 0;
 }
-.stat-item {
+
+.video-player {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.video-actions {
+  display: flex;
+  gap: 30px;
+  margin-top: 15px;
+  padding: 10px 0;
+  border-top: 1px solid #eee;
+}
+
+.action-item {
   display: flex;
   align-items: center;
-  margin: 5px 0;
+  gap: 8px;
+  cursor: pointer;
+  transition: color 0.3s;
 }
-.stat-item .icon {
-  font-size: 18px;
-  margin-right: 8px;
+
+.action-item:hover {
+  color: #1890ff;
+}
+
+.comments-section {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.comment-form {
+  margin-bottom: 20px;
+}
+.comment-form-item {
+  margin-bottom: 0px;
+}
+.send-comment-btn {
+  text-align: right;
+}
+
+.comments-list {
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.comment-item {
+  margin-bottom: 15px;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 6px;
+}
+
+.comment-item.reply {
+  margin-left: 10px;
+}
+
+.comment-footer {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 0.9em;
+}
+
+.username {
+  font-weight: 500;
+  color: #1890ff;
+  text-align: left;
+}
+
+.comment-time {
+  color: #666;
+}
+
+.comment-content {
+  color: #333;
+  line-height: 1.6;
+  text-align: left;
+}
+
+.ant-btn-primary {
+  margin-top: 10px;
 }
