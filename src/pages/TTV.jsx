@@ -4,7 +4,7 @@ import VideoUploader from '../components/VideoUploader';
 import VideoPlayer from '../components/VideoPlayer';
 import { post } from '../utils/request';
 
-const TTI = () => {
+const TTV = () => {
   const [videoData, setVideoData] = useState(null);
   const [coverBase64, setCoverBase64] = useState(null);
 
@@ -70,4 +70,4 @@ const TTI = () => {
   );
 };
 
-export default TTI;
+export default TTV;

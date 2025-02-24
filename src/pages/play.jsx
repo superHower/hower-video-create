@@ -102,7 +102,7 @@ const Play = () => {
         <div className="comment-content">{comment.content}</div>
         <div className="comment-footer">
           <span className="comment-time">
-            {new Date(comment.createdAt).toLocaleDateString()}
+            {new Date(comment.createdAt).toLocaleString()}
           </span>
           <span>回复</span>
         </div>
@@ -159,7 +159,7 @@ const Play = () => {
             {/* 右半边 - 评论相关 */}
             <div className="right-panel">
                 <div className="comments-section">
-                    <h2>评论（{commentData?.length}）</h2>
+                    <h2>评论</h2>
                     <div className="comment-form">
                         <Form onFinish={sendComment}>
                             <Form.Item name="content" className='comment-form-item'>
