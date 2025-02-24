@@ -7,17 +7,14 @@ import '../assets/css/play.css'; // 导入自定义 CSS 文件
 
 const { Meta } = Card;
 
-const MyWork = () => {
+const Home = () => {
   const [videoList, setVideoList] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   const getVideoList = async () => {
     try {
-      const { id } = JSON.parse(localStorage.getItem('user'))
-      const response: any = await post('/admin/video/list', {
-        accountId: id
-      });
+      const response: any = await post('/admin/video/list');
       setVideoList(response.data);
     } catch (error) {
       console.error('获取视频列表失败:', error);
@@ -110,4 +107,4 @@ const MyWork = () => {
   );
 };
 
-export default MyWork;
+export default Home;

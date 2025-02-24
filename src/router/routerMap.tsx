@@ -7,7 +7,7 @@ import ITI from "../pages/ITI";
 import TTI from "../pages/TTI";
 import MyWork from "../pages/MyWork";
 import Play from "../pages/play";
-
+import Home from "../pages/home";
 export const routerMap = [
   {
     path: "/login",
@@ -21,6 +21,10 @@ export const routerMap = [
       </PrivateRoute>
     ),
     children: [
+      {
+        path: "/home",
+        element: <Home />,
+      },
       {
         path: "/my",
         element: <MyWork />,

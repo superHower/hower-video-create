@@ -13,6 +13,7 @@ export default function AntdLayout() {
   const currentKey = location.pathname.split('/')[1] || "tti";
   // 精简后的Tabs配置（移出退出登录）
   const tabItems: TabsProps["items"] = [
+    { key: "home", label: "主页" },
     { key: "tti", label: "文生图片" },
     { key: "ttv", label: "文生视频" },
     { key: "itv", label: "图生视频" },

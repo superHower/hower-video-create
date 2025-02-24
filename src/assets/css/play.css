@@ -1,0 +1,23 @@
+.video-card {
+  transition: all 0.3s ease;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.hover:shadow-lg {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+.video-info {
+  padding: 15px;
+  background-color: rgba(249, 249, 249, 0.9);
+  border-radius: 8px;
+  margin-top: 10px;
+}
+.stat-item {
+  display: flex;
+  align-items: center;
+  margin: 5px 0;
+}
+.stat-item .icon {
+  font-size: 18px;
+  margin-right: 8px;
+}

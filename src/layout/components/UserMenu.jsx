@@ -3,6 +3,7 @@ import { UserOutlined, LogoutOutlined } from '@ant-design/icons';
 import { useNavigate } from "react-router-dom";
 const UserMenu = () => {
   const navigator = useNavigate();
+  const { username, accountType } = JSON.parse(localStorage.getItem('user'))
   
   const items = [
     {
@@ -10,7 +11,7 @@ const UserMenu = () => {
       label: '退出登录',
       icon: <LogoutOutlined />,
       onClick: () => {
-        clearToken();
+        localStorage.removeItem('user');
         navigator('/login');
       }
     }
@@ -21,7 +22,8 @@ const UserMenu = () => {
       <a onClick={(e) => e.preventDefault()}>
         <Space>
           <Avatar icon={<UserOutlined />} />
-          <span>用户名</span>
+          <span>{username}</span>
+          <span>{accountType}</span>
         </Space>
       </a>
     </Dropdown>
