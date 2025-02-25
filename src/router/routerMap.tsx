@@ -1,9 +1,7 @@
 import { Navigate } from "react-router-dom";
 import Login from "../pages/login";
 import Layout from "../layout/index";
-import PrivateRoute from "./privateRoute";
 
-import ITI from "../pages/ITI";
 import TTV from "../pages/TTV";
 import MyWork from "../pages/MyWork";
 import Play from "../pages/play";
@@ -16,9 +14,7 @@ export const routerMap = [
   {
     path: "/",
     element: (
-      <PrivateRoute>
-        <Layout />
-      </PrivateRoute>
+      <Layout />
     ),
     children: [
       {

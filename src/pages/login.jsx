@@ -50,11 +50,10 @@ const Login = () => {
     try {
       setLoading(true);
       const res = await post('/admin/login', {...values, codeText: text});
-      
       localStorage.setItem('user', JSON.stringify(res));
-      
-      navigate('/tti');
       message.success('登录成功');
+
+      navigate('/home');
     } catch (error) {
       message.error(error.message);
       refreshCaptcha();

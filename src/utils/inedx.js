@@ -1,5 +1,5 @@
 const getAPIURL = () => {
-  return process.env.NODE_ENV === 'development' ? 'http://localhost:9000' : 'www.example.com';
+  return process.env.NODE_ENV === 'development' ? 'http://118.31.32.184:9000' : 'http://118.31.32.184:9000';
 };
 const getDuration = (file) => {
   return new Promise((resolve, reject) => {

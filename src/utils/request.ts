@@ -26,10 +26,11 @@ instance.interceptors.request.use(
     if (config.url && isWhiteListPath(config.url)) {
       return config;
     }
-
+    
     let localUser = localStorage.getItem('user');
     let u = localUser ? localUser : JSON.stringify({ token: '' });
     const token = JSON.parse(u).token;
+    console.log("输出", token)
     if (token) {
       config.headers.Token = token;
     } else {
@@ -50,10 +51,8 @@ instance.interceptors.request.use(
 // 响应拦截器
 instance.interceptors.response.use(
   (response: AxiosResponse) => {
-    // 对响应数据做点什么
     if (response.data.code == 10024) {
       message.warning('Token已过期，请重新登录！');
-      // 使用回调函数处理导航
       if (typeof window !== 'undefined' && (window as any).handleNavigate) {
         (window as any).handleNavigate('/login');
       }
