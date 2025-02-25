@@ -22,9 +22,9 @@ const Play = () => {
             const commentResponse = await post('/admin/video/comment/list', {
                 videoId: id
             });
-            let datatree = buildCommentTree(commentResponse.data)
+            let datatree = buildCommentTree(commentResponse.result.data)
             setCommentData(datatree);
-            console.log("输出", datatree, commentResponse.data)
+            console.log("输出", datatree, commentResponse.result.data)
         } catch (err) {
             setError(err);
         } finally {

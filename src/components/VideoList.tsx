@@ -15,7 +15,7 @@ const VideoList = ({ getListParams, isHome }) => {
     const getVideoList = async () => {
         try {
             const response: any = await post('/admin/video/list', getListParams);
-            setVideoList(response.data);
+            setVideoList(response.result.data);
         } catch (error) {
             console.error('获取视频列表失败:', error);
         } finally {

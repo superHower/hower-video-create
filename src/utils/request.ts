@@ -8,7 +8,8 @@ const instance: AxiosInstance = axios.create({
   timeout: 10000, // 请求超时时间
 });
   const whiteList = [
-    /^\/admin\/login$/, 
+    /^\/admin\/login$/,
+    /^\/admin\/account$/, 
     /^\/admin\/captcha(\?.*)?$/
   ];
 
@@ -24,13 +25,13 @@ const instance: AxiosInstance = axios.create({
 instance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     if (config.url && isWhiteListPath(config.url)) {
+      console.log("在白名单中跳过")
       return config;
     }
     
     let localUser = localStorage.getItem('user');
     let u = localUser ? localUser : JSON.stringify({ token: '' });
     const token = JSON.parse(u).token;
-    console.log("输出", token)
     if (token) {
       config.headers.Token = token;
     } else {
@@ -76,7 +77,7 @@ export const get = async <T>(url: string, config?: AxiosRequestConfig): Promise<
 // 通用的 POST 请求方法
 export const post = async <T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> => {
   const response: any = await instance.post<T>(url, data, config);
-  return response.result;
+  return response;
 };
 
 // 通用的 PUT 请求方法

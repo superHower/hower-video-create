@@ -105,13 +105,13 @@ async function handleUploadProcess(
 
   // 1. 验证文件状态
   try {
-    const res = await post<IApiRes>('/upload/verify', {fileHash,totalCount: chunks.length,extname});
-    if (res.data.code === 'FILE_EXIST') {
-      return { success: true, filePath: res.data.data.filePath, exit: true };
-    } else if (res.data.code === 'ALL_CHUNK_UPLOAD') {
+    const res:any = await post<IApiRes>('/upload/verify', {fileHash,totalCount: chunks.length,extname});
+    if (res.result.data.code === 'FILE_EXIST') {
+      return { success: true, filePath: res.result.data.data.filePath, exit: true };
+    } else if (res.result.data.code === 'ALL_CHUNK_UPLOAD') {
       return await mergeFile(fileHash, extname);
-    } else if (res.data.code === 'SUCCESS') {
-      neededChunks = res.data.data.neededFileList;
+    } else if (res.result.data.code === 'SUCCESS') {
+      neededChunks = res.result.data.data.neededFileList;
     }
   } catch (error: any) {
     throw new Error(error.message || '文件验证失败');
@@ -140,8 +140,8 @@ async function handleUploadProcess(
         formData.append('fileHash', fileHash);
         formData.append('extname', extname);
 
-        const res = await post<IApiRes>('/upload/chunk', formData);
-        if (res.data.code === 'SUCCESS') {
+        const res:any = await post<IApiRes>('/upload/chunk', formData);
+        if (res.result.data.code === 'SUCCESS') {
           success = true;
           uploadedCount++;
           updateProgress();
@@ -167,9 +167,9 @@ async function handleUploadProcess(
  */
 async function mergeFile(fileHash: string, extname: string): Promise<IUploadFileRes> {
   try {
-    const mergeRes = await post<IApiRes>('/upload/merge', { fileHash, extname });
-    return mergeRes.data.code === 'SUCCESS'
-      ? { success: true, filePath: mergeRes.data.data.filePath }
+    const mergeRes:any = await post<IApiRes>('/upload/merge', { fileHash, extname });
+    return mergeRes.result.data.code === 'SUCCESS'
+      ? { success: true, filePath: mergeRes.result.data.data.filePath }
       : { success: false, message: '文件合并失败' };
   } catch (error: any) {
     throw new Error(error.message || '合并请求失败');
