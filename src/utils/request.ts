@@ -51,13 +51,16 @@ instance.interceptors.request.use(
 
 // 响应拦截器
 instance.interceptors.response.use(
-  (response: AxiosResponse) => {
+  (response: any) => {
     if (response.data.code == 10024) {
       message.warning('Token已过期，请重新登录！');
       if (typeof window !== 'undefined' && (window as any).handleNavigate) {
         (window as any).handleNavigate('/login');
       }
       return Promise.reject(new Error('未找到 token，跳转到登录页面'));
+    }else if(response.data.code !== 0){
+      message.warning(response.data.message);
+
     }
     return response.data;
   },

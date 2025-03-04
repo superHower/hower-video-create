@@ -21,6 +21,7 @@ const VideoWatch = ({
       controls: true,
       responsive: true,
       fluid: true,
+      aspectRatio: '16:9', // 固定宽高比
       preload: 'auto',
       sources: Array.isArray(src) ? src : [],
     };

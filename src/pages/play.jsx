@@ -1,5 +1,5 @@
-import React, { useEffect, useState, memo  } from 'react';
-import { Form, Button, Input } from 'antd';
+import React, { useEffect, useState, memo, useCallback, useMemo  } from 'react';
+import { Form, Button, Input, Modal } from 'antd';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { post, get } from '../utils/request';
 import VideoWatch from '../components/VideoWatch';
@@ -13,6 +13,11 @@ const Play = () => {
     const [commentData, setCommentData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
+    const [replyContent, setReplyContent] = useState('');
+    const [replyingTo, setReplyingTo] = useState(null);
+    const [showReplyModal, setShowReplyModal] = useState(false);
+
     const id = parseInt(searchParams.get('id'));
 
     const fetchVideoData = async () => {
@@ -84,11 +89,12 @@ const Play = () => {
         }
     };
 
-    const sendComment = async (values) => {
+    const sendComment = async (values, pid) => {
         try {
             await post('/admin/video/comment', {
                 videoId: id,
-                content: values.content
+                content: values.content,
+                parentId: pid || null
             });
             message.success('评论成功');
             fetchVideoData();
@@ -104,7 +110,14 @@ const Play = () => {
           <span className="comment-time">
             {new Date(comment.createdAt).toLocaleString()}
           </span>
-          <span>回复</span>
+          {!comment.parentId && (<Button 
+            onClick={() => {
+              setReplyingTo(comment.id);
+              setShowReplyModal(true); // 显示回复弹窗
+            }}
+            icon={<LikeOutlined />}
+          >回复</Button>
+        )}
         </div>
         {comment.replies?.length > 0 && (
           <div className="comment-replies">
@@ -155,13 +168,38 @@ const Play = () => {
                     </div>
                 </div>
             </div>
-
+            <Modal
+                title="回复评论"
+                open={showReplyModal}
+                onOk={() => {
+                    if (!replyContent.trim()) {
+                        message.error('回复内容不能为空');
+                        return;
+                    }
+                    sendComment({ content: replyContent }, replyingTo);
+                    setShowReplyModal(false);
+                    setReplyContent('');
+                    setReplyingTo(null);
+                }}
+                onCancel={() => {
+                    setShowReplyModal(false);
+                    setReplyContent('');
+                    setReplyingTo(null);
+                }}
+            >
+                <Input.TextArea
+                    rows={4}
+                    value={replyContent}
+                    onChange={(e) => setReplyContent(e.target.value)}
+                    placeholder="请输入回复内容"
+                />
+            </Modal>
             {/* 右半边 - 评论相关 */}
             <div className="right-panel">
                 <div className="comments-section">
                     <h2>评论</h2>
                     <div className="comment-form">
-                        <Form onFinish={sendComment}>
+                        <Form onFinish={(values) => sendComment(values, null)}>
                             <Form.Item name="content" className='comment-form-item'>
                                 <Input.TextArea rows={2} placeholder="写下你的评论..." />
                             </Form.Item>
