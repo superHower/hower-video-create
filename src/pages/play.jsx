@@ -1,4 +1,4 @@
-import React, { useEffect, useState, memo, useCallback, useMemo  } from 'react';
+import React, { useEffect, useState, memo, useCallback, useMemo,useRef  } from 'react';
 import { Form, Button, Input, Modal } from 'antd';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { post, get } from '../utils/request';
@@ -6,6 +6,8 @@ import VideoWatch from '../components/VideoWatch';
 import { CheckCircleOutlined, TagsOutlined, HeartOutlined, PlayCircleOutlined, LikeOutlined } from '@ant-design/icons';
 import { message } from 'antd';
 import '../assets/css/play.css'
+import { API_URL } from '../utils/inedx';
+import io from 'socket.io-client';
 
 const Play = () => {
     const [searchParams] = useSearchParams();
@@ -18,56 +20,97 @@ const Play = () => {
     const [replyingTo, setReplyingTo] = useState(null);
     const [showReplyModal, setShowReplyModal] = useState(false);
 
+    const socketRef = useRef(null);
     const id = parseInt(searchParams.get('id'));
 
     const fetchVideoData = async () => {
         try {
             const videoResponse = await get(`/admin/video/${id}`);
             setVideoData(videoResponse);
-            const commentResponse = await post('/admin/video/comment/list', {
-                videoId: id
-            });
-            let datatree = buildCommentTree(commentResponse.result.data)
-            setCommentData(datatree);
-            console.log("输出", datatree, commentResponse.result.data)
-        } catch (err) {
-            setError(err);
-        } finally {
-            setLoading(false);
+        } catch (err) {setError(err);
+        } finally {setLoading(false);
         }
     };
 
+    // 建立WebSocket连接
     useEffect(() => {
-        fetchVideoData();
-    }, [id]);
+        let isMounted = true;
+        
+        // 初始化数据获取和WebSocket连接
+        const initialize = async () => {
+            try {
+                await fetchVideoData();
+                const commentResponse = await post('/admin/video/comment/list', { videoId: id });
+                // 构建评论树
+                const commentMap = new Map();
+                const datatree = [];
+              
+                commentResponse.result.data.forEach(comment => {// 第一次遍历，将所有评论存储到映射中
+                  comment.replies = [];
+                  commentMap.set(comment.id, comment);
+                });
+                commentResponse.result.data.forEach(comment => {
+                  if (comment.parentId) {
+                    const parentComment = commentMap.get(comment.parentId);
+                    if (parentComment) {
+                      parentComment.replies.push(comment);
+                    }
+                  } else {
+                      datatree.push(comment);
+                  }
+                });
+        
+            
+                console.log("评论树：", datatree)
+                setCommentData(datatree);
 
-    function buildCommentTree(comments) {
-      const commentMap = {};
-      const rootComments = [];
-  
-      // 第一步：将所有评论存入 commentMap 中，并初始化 replies 数组
-      comments.forEach(comment => {
-          comment.replies = [];
-          commentMap[comment.id] = comment;
-      });
-  
-      // 第二步：遍历评论，将子评论添加到其父评论的 replies 数组中
-      comments.forEach(comment => {
-          const parentId = comment.parentId || null;
-          if (parentId === null) {
-              // 如果没有父评论 ID，说明是根评论
-              rootComments.push(comment);
-          } else {
-              const parentComment = commentMap[parentId];
-              if (parentComment) {
-                  // 如果父评论存在，将当前评论添加到父评论的 replies 数组中
-                  parentComment.replies.push(comment);
-              }
-          }
-      });
-  
-      return rootComments;
-  }
+                // 创建新socket连接
+                const newSocket = io(API_URL, {
+                    query: { videoId: id },
+                    transports: ['websocket']
+                });
+
+                newSocket.on('connect', () => {
+                    if (isMounted) {
+                        console.log('WebSocket connected');
+                        socketRef.current = newSocket;
+                    }
+                });
+
+                newSocket.on('new-comment', (newComment) => {
+                    console.log('新评论:', newComment);
+                  setCommentData(prev => {
+                    // 处理嵌套回复
+                    if (newComment.parentId) {
+                      const updated = prev.map(comment => 
+                        comment.id === newComment.parentId 
+                          ? { ...comment, replies: [...comment.replies, newComment] }
+                          : comment
+                      );
+                      return updated;
+                    }
+                    return [...prev, newComment];
+                  });
+                });
+
+            } catch (err) {
+                if (isMounted) setError(err);
+            } finally {
+                if (isMounted) setLoading(false);
+            }
+        };
+
+        initialize();
+
+        // 清理函数
+        return () => {
+            isMounted = false;
+            if (socketRef.current) {
+                socketRef.current.disconnect();
+                socketRef.current = null;
+            }
+        };
+    }, [id]);
 
     const handleFavorite = async () => {
         try {
@@ -97,7 +140,6 @@ const Play = () => {
                 parentId: pid || null
             });
             message.success('评论成功');
-            fetchVideoData();
         } catch (err) {
             message.error('评论失败');
         }
@@ -128,6 +170,9 @@ const Play = () => {
         )}
       </div>
     ));
+
+    // const commentTree = useMemo(() => buildCommentTree(commentData), [commentData]);
+
     // 递归渲染评论及其回复的函数
     const renderComments = (comments) => {
       return comments.map((comment) => (
