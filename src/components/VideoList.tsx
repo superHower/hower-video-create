@@ -3,7 +3,7 @@ import { Row, Col, Card, Spin, Button, Empty } from 'antd';
 import { CheckCircleOutlined, TagsOutlined, HeartOutlined, PlayCircleOutlined, LikeOutlined } from '@ant-design/icons';
 import { post, get } from '../utils/request';
 import { useNavigate } from 'react-router-dom';
-import '../assets/css/play.css';
+import '../assets/css/videolist.css';
 
 const { Meta } = Card;
 
@@ -70,35 +70,34 @@ const VideoList = ({ getListParams, isHome }) => {
                                     onClick={() => handleCardClick(video.id)}
                                     className="video-card hover:shadow-lg transition-shadow duration-300"
                                 >
-                                    <Meta
-                                        title={video.title}
-                                        style={{ marginTop: '8px' }}
-                                    />
+                                    <div className="flex justify-between items-center">
+                                        <Meta title={video.title} />
+                                    </div>
                                     <div className="video-info">
-                                        {!isHom && (
-                                          <div className="video-status">
-                                            <CheckCircleOutlined className="text-green" />
-                                            <span className="ml-1">状态: {video.status == 0 ? '正常' :  video.status == 1 ? '下架' : '待审核'}</span>
-                                          </div>
-                                        )}
-                                        <div className="video-tags">
-                                            <TagsOutlined className="text-purple" />
-                                            <span className="ml-1">标签: {video.tags == 0 ? '视频由AI生成' : ''}</span>
-                                        </div>
-                                        <div className="video-stats">
+                                        <div className="flex space-x-4">
                                             <div className="stat-item">
                                                 <HeartOutlined className="text-red" />
-                                                <span className="ml-1">收藏量: {video.favoriteCount}</span>
+                                                <span className="ml-1">{video.favoriteCount}</span>
                                             </div>
                                             <div className="stat-item">
                                                 <PlayCircleOutlined className="text-blue" />
-                                                <span className="ml-1">播放量: {video.playCount}</span>
+                                                <span className="ml-1">{video.playCount}</span>
                                             </div>
                                             <div className="stat-item">
                                                 <LikeOutlined className="text-yellow" />
-                                                <span className="ml-1">点赞量: {video.likeCount}</span>
+                                                <span className="ml-1">{video.likeCount}</span>
                                             </div>
                                         </div>
+                                        <div className="video-tags">
+                                            <TagsOutlined className="text-purple" />
+                                            <span className="ml-1">标签: {video.tags === 0 ? '视频由AI生成' : ''}</span>
+                                        </div>
+                                        {!isHom && (
+                                            <div className="video-status">
+                                                <CheckCircleOutlined className="text-green" />
+                                                <span className="ml-1">状态: {video.status === 0 ? '正常' : video.status === 1 ? '下架' : '待审核'}</span>
+                                            </div>
+                                        )}
                                     </div>
                                 </Card>
                             </Col>

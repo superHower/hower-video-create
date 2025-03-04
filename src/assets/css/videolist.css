@@ -1,0 +1,54 @@
+/* play.css */
+.video-card {
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.video-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.video-info {
+  padding: 12px;
+}
+
+.video-tags {
+  margin-bottom: 8px;
+  color: #666;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  color: #666;
+}
+
+.stat-item svg {
+  margin-right: 4px;
+}
+
+/* 当屏幕宽度较小时，调整布局 */
+@media (max-width: 768px) {
+  .video-info {
+    font-size: 14px;
+  }
+}
+.flex {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-around;
+}
+.ant-card-meta-title {
+  width: 60%;
+  overflow: visible;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ant-card-meta-detail {
+  width: 100%;
+}
+.ant-card-body {
+  padding: 8px;
+}

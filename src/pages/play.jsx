@@ -157,6 +157,7 @@ const Play = () => {
               setReplyingTo(comment.id);
               setShowReplyModal(true); // 显示回复弹窗
             }}
+            size='small'
             icon={<LikeOutlined />}
           >回复</Button>
         )}
