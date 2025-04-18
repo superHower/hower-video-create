@@ -1,6 +1,7 @@
 import { Dropdown, Avatar, Space } from 'antd';
 import { UserOutlined, LogoutOutlined } from '@ant-design/icons';
 import { useNavigate } from "react-router-dom";
+
 const UserMenu = () => {
   const navigator = useNavigate();
 
@@ -21,14 +22,14 @@ const UserMenu = () => {
 
   return (
     <Dropdown menu={{ items }} trigger={['click']}>
-      <a onClick={(e) => e.preventDefault()}>
+      <a onClick={(e) => e.preventDefault()} className="user-menu-trigger">
         <Space>
-          <Avatar icon={<UserOutlined />} />
-          <span>{username}</span>
-          <span>{accountType}</span>
+          <Avatar icon={<UserOutlined />} style={{ background: '#ff2c55' }} />
+          <span style={{ color: '#fff' }}>{username}</span>
         </Space>
       </a>
     </Dropdown>
   );
 };
+
 export default UserMenu

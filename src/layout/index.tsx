@@ -1,47 +1,62 @@
 import { Tabs, TabsProps } from "antd";
 import React from "react";
-import { Outlet, useNavigate,useLocation } from "react-router-dom";
+import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { clearToken } from "../tools/auth";
 import "../assets/css/layout.css"
 import { Layout } from "antd";
-import { Color } from "antd/es/color-picker";
+import { HomeOutlined, VideoCameraOutlined, UserOutlined, PlayCircleOutlined } from '@ant-design/icons';
 import UserMenu from "./components/UserMenu";
 const { Header, Content } = Layout;
+
 export default function AntdLayout() {
   const navigator = useNavigate();
   const location = useLocation();
-  const currentKey = location.pathname.split('/')[1] || "tti";
-  // 精简后的Tabs配置（移出退出登录）
+  const currentKey = location.pathname.split('/')[1] || "home";
+
   const tabItems: TabsProps["items"] = [
-    { key: "home", label: "主页" },
-    // { key: "tti", label: "文生图片" },
-    { key: "ttv", label: "文生视频" },
-    { key: "my", label: "我的作品" },
-    { key: "play", label: "视频详情" }
+    { 
+      key: "home", 
+      label: "首页",
+      icon: <HomeOutlined />
+    },
+    { 
+      key: "ttv", 
+      label: "创作",
+      icon: <VideoCameraOutlined />
+    },
+    { 
+      key: "my", 
+      label: "我的",
+      icon: <UserOutlined />
+    },
+    { 
+      key: "play", 
+      label: "播放",
+      icon: <PlayCircleOutlined />,
+      style: { display: 'none' }  // 隐藏播放标签，但保持路由功能
+    }
   ];
 
   return (
-    <Layout className="layout-container">
-      {/* 顶部导航栏 */}
-      <Header className="layout-header">
-        <Tabs
-          defaultActiveKey="tti"
-          activeKey={currentKey} // 动态绑定选中状态
-          items={tabItems}
-          onChange={(key) => navigator(`/${key}${location.search}`)}
-          tabBarStyle={{ marginBottom: 0 }}
-        />
-        
-        <div style={{ marginLeft: 'auto' }}>
-          <UserMenu />
+    <Layout className="douyin-layout">
+      <Header className="douyin-header">
+        <div className="header-content">
+          <div className="logo">Hower Video</div>
+          <Tabs
+            defaultActiveKey="home"
+            activeKey={currentKey}
+            items={tabItems}
+            onChange={(key) => navigator(`/${key}${location.search}`)}
+            className="douyin-tabs"
+          />
+          <div className="user-menu">
+            <UserMenu />
+          </div>
         </div>
       </Header>
 
-      {/* 内容区域 */}
-      <Content style={{ padding: '24px 50px', marginTop: 64 }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-          <Outlet />
-        </div>
+      <Content className="douyin-content">
+        <Outlet />
       </Content>
     </Layout>
   );

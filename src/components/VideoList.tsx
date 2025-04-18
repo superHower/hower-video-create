@@ -4,6 +4,7 @@ import { CheckCircleOutlined, TagsOutlined, HeartOutlined, PlayCircleOutlined, L
 import { post, get } from '../utils/request';
 import { useNavigate } from 'react-router-dom';
 import '../assets/css/videolist.css';
+import defaultImage from '../assets/image/empty-box.png';  // 添加默认图片导入
 
 const { Meta } = Card;
 
@@ -52,54 +53,50 @@ const VideoList = ({ getListParams, isHome }) => {
                                 md={8}
                                 lg={6}
                                 xl={4}
-                                style={{ textAlign: 'center' }}
                             >
-                                <Card
-                                    hoverable
-                                    cover={
-                                        <img
-                                            alt={video.title}
-                                            src={video.coverUrl}
-                                            style={{
-                                                height: '200px',
-                                                objectFit: 'cover',
-                                                borderRadius: '8px',
-                                            }}
-                                        />
-                                    }
-                                    onClick={() => handleCardClick(video.id)}
-                                    className="video-card hover:shadow-lg transition-shadow duration-300"
-                                >
-                                    <div className="flex justify-between items-center">
-                                        <Meta title={video.title} />
-                                    </div>
-                                    <div className="video-info">
-                                        <div className="flex space-x-4">
-                                            <div className="stat-item">
-                                                <HeartOutlined className="text-red" />
-                                                <span className="ml-1">{video.favoriteCount}</span>
+                                <div className="video-card-container" onClick={() => handleCardClick(video.id)}>
+                                    <div className="video-card-wrapper">
+                                        <div className="video-thumbnail">
+                                            <img
+                                                alt={video.title}
+                                                src={video.coverUrl || defaultImage}
+                                                onError={(e) => {
+                                                    const target = e.target as HTMLImageElement;
+                                                    target.onerror = null; // 防止循环加载
+                                                    target.src = defaultImage;
+                                                }}
+                                            />
+                                            <div className="video-tags-left">
+                                                <div className="video-stats">
+                                                    <div className="stat-group">
+                                                        <span className="stat"><PlayCircleOutlined />{video.playCount}</span>
+                                                        <span className="stat"><LikeOutlined />{video.likeCount}</span>
+                                                        <span className="stat"><HeartOutlined />{video.favoriteCount}</span>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div className="stat-item">
-                                                <PlayCircleOutlined className="text-blue" />
-                                                <span className="ml-1">{video.playCount}</span>
+                                            <div className="video-duration">03:24</div>
+                                            <div className="video-tags-overlay">
+                                                {video.tags === 0 && <span className="tag">AI生成</span>}
                                             </div>
-                                            <div className="stat-item">
-                                                <LikeOutlined className="text-yellow" />
-                                                <span className="ml-1">{video.likeCount}</span>
+                                            {!isHom && (
+                                                <div className="video-tags-status">
+                                                        <span className="tag">{video.status === 0 ? '正常' : video.status === 1 ? '下架' : '待审核'}</span>
+                                                </div>
+                                            )}
+                                            <div className="video-hover-info">
+                                                <PlayCircleOutlined className="play-icon" />
                                             </div>
                                         </div>
-                                        <div className="video-tags">
-                                            <TagsOutlined className="text-purple" />
-                                            <span className="ml-1">标签: {video.tags === 0 ? '视频由AI生成' : ''}</span>
-                                        </div>
-                                        {!isHom && (
-                                            <div className="video-status">
-                                                <CheckCircleOutlined className="text-green" />
-                                                <span className="ml-1">状态: {video.status === 0 ? '正常' : video.status === 1 ? '下架' : '待审核'}</span>
+                                        <div className="video-content">
+                                            <h3 className="video-title">{video.title}</h3>
+                                            <div className="video-author">
+                                                <div>@ {video.accountUsername}</div>
+                                                <div>{video.updatedAt.substring(5, 10)}</div>
                                             </div>
-                                        )}
+                                        </div>
                                     </div>
-                                </Card>
+                                </div>
                             </Col>
                         ))}
                     </Row>

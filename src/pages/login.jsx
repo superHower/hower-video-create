@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Form, Input, Button, message, Modal } from 'antd';
-import { EyeInvisibleOutlined, EyeTwoTone, UserOutlined } from '@ant-design/icons';
+import { EyeInvisibleOutlined, EyeTwoTone, UserOutlined, LockOutlined } from '@ant-design/icons';
 import '../assets/css/login.css';
 import { post, get } from '../utils/request';
 
@@ -53,6 +53,7 @@ const Login = () => {
       const res = await post('/admin/login', { ...values, codeText: text });
       if(res.code == 1) {
         message.error(res.message);
+        refreshCaptcha();
         return
       }
       localStorage.setItem('user', JSON.stringify(res.result));
@@ -60,7 +61,7 @@ const Login = () => {
       navigate('/home');
     } catch (error) {
       message.error(error.message);
-      refreshCaptcha();
+      await refreshCaptcha();
     } finally {
       setLoading(false);
     }
@@ -101,46 +102,115 @@ const Login = () => {
 
   return (
     <div className="login-container">
-      <div className="login-panel">
-        <h3 className="login-title">用户登录</h3>
-        <Form form={form} onFinish={handleSubmit} initialValues={{ username: '', password: '' }}>
-          <Form.Item name="username" rules={rules.username}>
-            <Input placeholder="请输入用户名" prefix={<UserOutlined />} size="large" />
-          </Form.Item>
-          <Form.Item name="password" rules={rules.password}>
-            <Input.Password placeholder="请输入密码" size="large" iconRender={(visible) => visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />} />
-          </Form.Item>
-          <div className="code-container">
-            <Form.Item name="captcha" rules={rules.captcha}>
-              <Input placeholder="请输入验证码" size="large" maxLength={4} className="code-input" />
-            </Form.Item>
-            <img src={captchaUrl} className="code-image" onClick={refreshCaptcha} alt="验证码" />
-          </div>
-          <Form.Item>
-            <Button type="primary" htmlType="submit" size="large" block loading={loading} className="login-btn">
-              {loading ? '登录中...' : '登录'}
-            </Button>
-          </Form.Item>
-        </Form>
-        <Button type="link" onClick={showRegisterModal}>
-          注册
-        </Button>
+      <div className="login-background">
+        <div className="circles">
+          {[...Array(10)].map((_, i) => (
+            <div key={i} className="circle"></div>
+          ))}
+        </div>
       </div>
-      <Modal title="用户注册" open={isRegisterModalVisible} onCancel={handleCancelRegister} footer={
-        <Button onClick={handleCancelRegister}>取消</Button>
-      }>
+      
+      <div className="login-content">
+        <div className="login-panel">
+          <div className="brand">
+            <h1 className="brand-title">Hower Video</h1>
+            <p className="brand-subtitle">创意无限 分享精彩</p>
+          </div>
+          
+          <Form form={form} onFinish={handleSubmit} initialValues={{ username: '', password: '' }}>
+            <Form.Item name="username" rules={rules.username}>
+              <Input 
+                placeholder="请输入用户名" 
+                prefix={<UserOutlined className="input-icon" />} 
+                size="large"
+                className="custom-input" 
+              />
+            </Form.Item>
+            
+            <Form.Item name="password" rules={rules.password}>
+              <Input.Password 
+                placeholder="请输入密码" 
+                size="large" 
+                prefix={<LockOutlined className="input-icon" />}
+                iconRender={(visible) => visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />}
+                className="custom-input"
+              />
+            </Form.Item>
+            
+            <div className="code-container">
+              <Form.Item name="captcha" rules={rules.captcha}>
+                <Input 
+                  placeholder="验证码" 
+                  size="large" 
+                  maxLength={4} 
+                  className="code-input custom-input" 
+                />
+              </Form.Item>
+              <img 
+                src={captchaUrl} 
+                className="code-image" 
+                onClick={refreshCaptcha} 
+                alt="验证码" 
+              />
+            </div>
+            
+            <Form.Item>
+              <Button 
+                type="primary" 
+                htmlType="submit" 
+                size="large" 
+                block 
+                loading={loading} 
+                className="login-btn"
+              >
+                {loading ? '登录中...' : '登录'}
+              </Button>
+            </Form.Item>
+          </Form>
+          
+          <div className="login-footer">
+            <span>还没有账号？</span>
+            <Button type="link" onClick={showRegisterModal} className="register-link">
+              立即注册
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      <Modal 
+        title="用户注册" 
+        open={isRegisterModalVisible} 
+        onCancel={handleCancelRegister} 
+        className="register-modal"
+        footer={null}
+      >
         <Form form={registerForm} onFinish={handleRegisterSubmit}>
           <Form.Item name="username" rules={rules.username}>
-            <Input placeholder="请输入用户名" prefix={<UserOutlined />} size="large" />
+            <Input 
+              placeholder="请输入用户名" 
+              prefix={<UserOutlined />} 
+              size="large"
+              className="custom-input" 
+            />
           </Form.Item>
+          
           <Form.Item name="password" rules={rules.password}>
-            <Input.Password placeholder="请输入密码" size="large" iconRender={(visible) => visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />} />
+            <Input.Password 
+              placeholder="请输入密码" 
+              size="large"
+              prefix={<LockOutlined />}
+              iconRender={(visible) => visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />}
+              className="custom-input"
+            />
           </Form.Item>
-          <Form.Item>
-              <Button type="primary" htmlType="submit">注册</Button>
+          
+          <Form.Item className="register-btns">
+            <Button type="primary" htmlType="submit" className="register-submit">
+              注册
+            </Button>
+            <Button onClick={handleCancelRegister}>取消</Button>
           </Form.Item>
         </Form>
-        
       </Modal>
     </div>
   );

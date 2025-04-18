@@ -1,20 +1,108 @@
-.layout-container {
+.douyin-layout {
   min-height: 100vh;
+  background: #121212;
 }
 
-.ant-layout-header {
+.douyin-header {
   position: fixed;
-  width: 100%;
   top: 0;
-  z-index: 1;
-
-
+  width: 100%;
+  z-index: 1000;
+  padding: 0;
+  background: rgba(18, 18, 18, 0.8) !important;
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
-.layout-header   { 
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #fff;
+
+.header-content {
+  max-width: 1200px;
+  margin: 0 auto;
   padding: 0 24px;
-  box-shadow: 0 2px 8px #f0f1f2;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  color: #ff2c55;
+  font-size: 24px;
+  font-weight: bold;
+  margin-right: 48px;
+}
+
+.douyin-tabs {
+  flex: 1;
+}
+
+.douyin-tabs .ant-tabs-nav {
+  margin: 0;
+}
+
+.douyin-tabs .ant-tabs-nav::before {
+  border: none !important;
+}
+
+.douyin-tabs .ant-tabs-tab {
+  padding: 8px 20px;
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 16px;
+}
+
+.douyin-tabs .ant-tabs-tab:hover {
+  color: #ff2c55;
+}
+
+.douyin-tabs .ant-tabs-tab-active {
+  background: transparent;
+}
+
+.douyin-tabs .ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: #ff2c55 !important;
+}
+
+.douyin-tabs .ant-tabs-ink-bar {
+  background: #ff2c55;
+}
+
+.user-menu {
+  margin-left: 24px;
+}
+
+.user-menu .ant-space {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.douyin-content {
+  margin-top: 64px;
+  min-height: calc(100vh - 64px);
+  padding: 24px;
+  background: #121212;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .header-content {
+    padding: 0 16px;
+  }
+
+  .logo {
+    font-size: 20px;
+    margin-right: 24px;
+  }
+
+  .douyin-tabs .ant-tabs-tab {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo {
+    display: none;
+  }
+
+  .douyin-content {
+    padding: 16px;
+  }
 }
