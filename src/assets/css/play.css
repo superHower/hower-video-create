@@ -54,9 +54,7 @@
   .video-section .side {
     width: 15%;
   }
-  .video-desc {
-    left: 15% !important;
-  }
+
   .video-player {
     width: 70% !important;
   }
@@ -66,9 +64,7 @@
   .video-section .side {
     width: 10%;
   }
-  .video-desc {
-    left: 10% !important;
-  }
+
   .video-player {
     width: 80% !important;
   }
@@ -78,9 +74,7 @@
   .video-section .side {
     width: 5%;
   }
-  .video-desc {
-    left: 5% !important;
-  }
+
   .video-player {
     width: 90% !important;
   }
@@ -108,8 +102,8 @@
 }
 .video-desc {
     position: fixed;
-    bottom: 64px;
-    left: 20%;
+    bottom: 32px;
+    left: 24px;
     color: #fff;
     max-width: 500px;
     z-index: 10;
@@ -120,16 +114,10 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    margin-bottom: 16px;
-}
-
-.author-detail {
-    display: flex;
-    flex-direction: column;
 }
 
 .author-name {
-    font-size: 16px;
+    font-size: 20px;
     font-weight: 600;
     margin-bottom: 4px;
 }

@@ -27,5 +27,15 @@ const getFileName = (fileName) => {
   return fileName.slice(0, -fileExtension.length - 1);
 };
 
+const formatDuration = (seconds) => {
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+
+  // 如果秒数小于 10，则在前面补零
+  const formattedSeconds = remainingSeconds < 10 ? `0${remainingSeconds}` : remainingSeconds;
+
+  return `${minutes}:${formattedSeconds}`;
+}
+
 export const API_URL = getAPIURL();
-export { getDuration, getFileName }
+export { getDuration, getFileName, formatDuration }

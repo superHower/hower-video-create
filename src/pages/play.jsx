@@ -5,9 +5,10 @@ import { post, get } from '../utils/request';
 import VideoWatch from '../components/VideoWatch';
 import { 
     CommentOutlined, 
-    HeartOutlined, 
-    PlayCircleOutlined, 
-    LikeOutlined,
+    HeartOutlined,
+    HeartFilled,  // 添加实心心形图标
+    StarOutlined,
+    StarFilled,   // 添加实心星星图标
     ShareAltOutlined,
     UserOutlined
 } from '@ant-design/icons';
@@ -200,11 +201,22 @@ const Play = () => {
 
             <div className="action-bar">
                 <div className="action-item" onClick={handleLike}>
-                    <LikeOutlined />
+                    <Avatar size={40} icon={<UserOutlined />} />
+                </div>
+                <div className="action-item" onClick={handleLike}>
+                    {videoData?.isLiked ? (
+                        <HeartFilled style={{ color: '#ff2c55' }} />
+                    ) : (
+                        <HeartOutlined />
+                    )}
                     <span className="action-count">{videoData?.likeCount || 0}</span>
                 </div>
                 <div className="action-item" onClick={handleFavorite}>
-                    <HeartOutlined />
+                    {videoData?.isCollected ? (
+                        <StarFilled style={{ color: '#FFD700' }} />
+                    ) : (
+                        <StarOutlined />
+                    )}
                     <span className="action-count">{videoData?.favoriteCount || 0}</span>
                 </div>
                 <div className="action-item" onClick={() => setShowCommentDrawer(true)}>
@@ -219,11 +231,8 @@ const Play = () => {
 
             <div className='video-desc'>
                 <div className='author-info'>
-                    <Avatar size={40} icon={<UserOutlined />} />
-                    <div className='author-detail'>
-                        <div className='author-name'>{videoData?.username || '用户名'}</div>
-                        <div className='publish-time'>{new Date(videoData?.createTime).toLocaleDateString()}</div>
-                    </div>
+                    <div className='author-name'>@ {videoData?.accountUsername}</div>
+                    <div className='publish-time'>{new Date(videoData?.updatedAt).toLocaleDateString()}</div>
                 </div>
                 <div className='video-info-content'>
                     <div className='video-desc-title'>

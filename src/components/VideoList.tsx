@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Row, Col, Card, Spin, Button, Empty } from 'antd';
-import { CheckCircleOutlined, TagsOutlined, HeartOutlined, PlayCircleOutlined, LikeOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, TagsOutlined, HeartOutlined, PlayCircleOutlined, LikeOutlined, StarOutlined } from '@ant-design/icons';
 import { post, get } from '../utils/request';
 import { useNavigate } from 'react-router-dom';
 import '../assets/css/videolist.css';
 import defaultImage from '../assets/image/empty-box.png';  // 添加默认图片导入
-
+import { formatDuration } from '../utils/inedx';
 const { Meta } = Card;
 
 const VideoList = ({ getListParams, isHome }) => {
@@ -35,7 +35,7 @@ const VideoList = ({ getListParams, isHome }) => {
     };
 
     return (
-        <div style={{ padding: '24px' }}>
+        <div style={{ marginTop: '64px', padding: '24px' }}>
             <Spin spinning={loading} tip="加载中">
                 {videoList.length === 0 ? (
                     <Empty
@@ -44,15 +44,15 @@ const VideoList = ({ getListParams, isHome }) => {
                         style={{ margin: '40px 0' }}
                     />
                 ) : (
-                    <Row gutter={[16, 16]}>
+                    <Row gutter={[24, 24]}>  {/* 增加栅格间距 */}
                         {videoList.map((video, index) => (
                             <Col
                                 key={index}
                                 xs={24}
                                 sm={12}
-                                md={8}
-                                lg={6}
-                                xl={4}
+                                md={12}  
+                                lg={8}   
+                                xl={6}   
                             >
                                 <div className="video-card-container" onClick={() => handleCardClick(video.id)}>
                                     <div className="video-card-wrapper">
@@ -70,15 +70,17 @@ const VideoList = ({ getListParams, isHome }) => {
                                                 <div className="video-stats">
                                                     <div className="stat-group">
                                                         <span className="stat"><PlayCircleOutlined />{video.playCount}</span>
-                                                        <span className="stat"><LikeOutlined />{video.likeCount}</span>
-                                                        <span className="stat"><HeartOutlined />{video.favoriteCount}</span>
+                                                        <span className="stat"><HeartOutlined />{video.likeCount}</span>
+                                                        <span className="stat"><StarOutlined />{video.favoriteCount}</span>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className="video-duration">03:24</div>
-                                            <div className="video-tags-overlay">
-                                                {video.tags === 0 && <span className="tag">AI生成</span>}
-                                            </div>
+                                            <div className="video-duration">{ formatDuration(video.duration) }</div>
+                                            {!isHom && (
+                                                <div className="video-tags-overlay">
+                                                    {video.tags === 0 && <span className="tag">AI生成</span>}
+                                                </div>
+                                            )}
                                             {!isHom && (
                                                 <div className="video-tags-status">
                                                         <span className="tag">{video.status === 0 ? '正常' : video.status === 1 ? '下架' : '待审核'}</span>

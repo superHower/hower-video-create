@@ -1,6 +1,37 @@
 .video-card-container {
+    width: 100%;
     cursor: pointer;
-    transition: transform 0.2s ease;
+    transition: transform 0.3s;
+}
+
+.video-thumbnail {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%; /* 16:9 宽高比 */
+    overflow: hidden;
+}
+
+.video-thumbnail img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.video-content {
+    padding: 12px;  /* 增加内容区域的内边距 */
+}
+
+.video-title {
+    font-size: 16px;  /* 增加标题字体大小 */
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+.video-author {
+    font-size: 14px;  /* 增加作者信息字体大小 */
 }
 
 .video-card-container:hover {
