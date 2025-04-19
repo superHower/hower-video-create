@@ -1,5 +1,5 @@
 import React, { useEffect, useState, memo, useRef } from 'react';
-import { Form, Button, Input, Drawer, message, Avatar } from 'antd';
+import { Form, Button, Input, Drawer, message, Avatar, Modal } from 'antd';
 import { useSearchParams } from 'react-router-dom';
 import { post, get } from '../utils/request';
 import VideoWatch from '../components/VideoWatch';
@@ -256,26 +256,53 @@ const Play = () => {
                 open={showCommentDrawer}
                 className="comment-drawer"
             >
-                <div className="comments-section">
-                    <div className="comment-form">
-                        <Form onFinish={(values) => sendComment(values, null)}>
-                            <Form.Item name="content" className="comment-form-item">
-                                <Input.TextArea 
-                                    rows={3} 
-                                    placeholder="写下你的评论..." 
-                                    bordered={false}
-                                />
-                            </Form.Item>
-                            <Button type="primary" htmlType="submit" className="submit-btn">
-                                发送
-                            </Button>
-                        </Form>
-                    </div>
-                    <div className="comments-list">
-                        {commentData && renderComments(commentData)}
-                    </div>
+                <div className="comment-form">
+                    <Form onFinish={(values) => sendComment(values, null)}>
+                        <Form.Item name="content" className="comment-form-item">
+                            <Input.TextArea 
+                                rows={2} 
+                                placeholder="写下你的评论..." 
+                                bordered={false}
+                            />
+                        </Form.Item>
+                        <Button type="primary" htmlType="submit" className="submit-btn">
+                            发送
+                        </Button>
+                    </Form>
+                </div>
+                <div className="comments-list">
+                    {commentData && renderComments(commentData)}
                 </div>
             </Drawer>
+
+            {/* 添加回复弹窗 */}
+            <Modal
+                title="回复评论"
+                open={showReplyModal}
+                onCancel={() => {
+                    setShowReplyModal(false);
+                    setReplyingTo(null);
+                }}
+                footer={null}
+            >
+                <Form onFinish={(values) => {
+                    sendComment(values, replyingTo);
+                    setShowReplyModal(false);
+                    setReplyingTo(null);
+                }}>
+                    <Form.Item name="content">
+                        <Input.TextArea 
+                            rows={4}
+                            placeholder="写下你的回复..."
+                        />
+                    </Form.Item>
+                    <Form.Item className="reply-form-footer">
+                        <Button type="primary" htmlType="submit">
+                            发送回复
+                        </Button>
+                    </Form.Item>
+                </Form>
+            </Modal>
         </div>
     );
 };
