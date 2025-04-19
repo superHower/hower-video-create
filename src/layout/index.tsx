@@ -55,7 +55,7 @@ export default function AntdLayout() {
         </div>
       </Header>
 
-      <Content className="douyin-content">
+      <Content>
         <Outlet />
       </Content>
     </Layout>

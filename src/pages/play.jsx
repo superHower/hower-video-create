@@ -1,11 +1,17 @@
-import React, { useEffect, useState, memo, useCallback, useMemo,useRef  } from 'react';
-import { Form, Button, Input, Modal } from 'antd';
-import { useParams, useSearchParams } from 'react-router-dom';
+import React, { useEffect, useState, memo, useRef } from 'react';
+import { Form, Button, Input, Drawer, message, Avatar } from 'antd';
+import { useSearchParams } from 'react-router-dom';
 import { post, get } from '../utils/request';
 import VideoWatch from '../components/VideoWatch';
-import { CheckCircleOutlined, TagsOutlined, HeartOutlined, PlayCircleOutlined, LikeOutlined } from '@ant-design/icons';
-import { message } from 'antd';
-import '../assets/css/play.css'
+import { 
+    CommentOutlined, 
+    HeartOutlined, 
+    PlayCircleOutlined, 
+    LikeOutlined,
+    ShareAltOutlined,
+    UserOutlined
+} from '@ant-design/icons';
+import '../assets/css/play.css';
 import { API_URL } from '../utils/inedx';
 import io from 'socket.io-client';
 
@@ -19,6 +25,7 @@ const Play = () => {
     const [replyContent, setReplyContent] = useState('');
     const [replyingTo, setReplyingTo] = useState(null);
     const [showReplyModal, setShowReplyModal] = useState(false);
+    const [showCommentDrawer, setShowCommentDrawer] = useState(false);
 
     const socketRef = useRef(null);
     const id = parseInt(searchParams.get('id'));
@@ -145,118 +152,121 @@ const Play = () => {
         }
     }
     const Comment = memo(({ comment }) => (
-      <div className="comment-item">
-        <div className="username">{comment.username}</div>
-        <div className="comment-content">{comment.content}</div>
-        <div className="comment-footer">
-          <span className="comment-time">
-            {new Date(comment.createdAt).toLocaleString()}
-          </span>
-          {!comment.parentId && (<Button 
-            onClick={() => {
-              setReplyingTo(comment.id);
-              setShowReplyModal(true); // 显示回复弹窗
-            }}
-            size='small'
-            icon={<LikeOutlined />}
-          >回复</Button>
-        )}
+        <div className="comment-item">
+            <Avatar icon={<UserOutlined />} />
+            <div className="comment-content-wrapper">
+                <div className="username">{comment.username}</div>
+                <div className="comment-content">{comment.content}</div>
+                <div className="comment-footer">
+                    <span className="comment-time">
+                        {new Date(comment.createdAt).toLocaleString()}
+                    </span>
+                    {!comment.parentId && (
+                        <Button 
+                            type="text"
+                            onClick={() => {
+                                setReplyingTo(comment.id);
+                                setShowReplyModal(true);
+                            }}
+                            size='small'
+                        >回复</Button>
+                    )}
+                </div>
+                {comment.replies?.length > 0 && (
+                    <div className="comment-replies">
+                        {comment.replies.map((reply) => (
+                            <Comment key={reply.id} comment={reply} />
+                        ))}
+                    </div>
+                )}
+            </div>
         </div>
-        {comment.replies?.length > 0 && (
-          <div className="comment-replies">
-            {comment.replies.map((reply) => (
-              <Comment key={reply.id} comment={reply} />
-            ))}
-          </div>
-        )}
-      </div>
     ));
 
-    // const commentTree = useMemo(() => buildCommentTree(commentData), [commentData]);
-
-    // 递归渲染评论及其回复的函数
+    // Add the missing renderComments function
     const renderComments = (comments) => {
-      return comments.map((comment) => (
-        <Comment key={comment.id} comment={comment} />
-      ));
+        return comments.map((comment) => (
+            <Comment key={comment.id} comment={comment} />
+        ));
     };
 
-    if (loading) {
-        return <div>加载中...</div>;
-    }
-
-    if (error) {
-        return <div>加载失败: {error.message}</div>;
-    }
-
     return (
-        <div className="container">
-            {/* 左半边 - 视频相关 */}
-            <div className="left-panel">
-                <div className="video-container">
-                    <h1 className="video-title">{videoData.title}</h1>
-                    <div className="video-wrapper">
-                        {videoData && <VideoWatch src={videoData.videoUrl} className="video-player" style={{}} />}
+        <div className="douyin-container">
+            <div className="video-section">
+                <div className="side"></div>
+                {videoData && <VideoWatch src={videoData.videoUrl} className="video-player" style={{}} />}
+                <div className="side"></div>
+            </div>
+
+            <div className="action-bar">
+                <div className="action-item" onClick={handleLike}>
+                    <LikeOutlined />
+                    <span className="action-count">{videoData?.likeCount || 0}</span>
+                </div>
+                <div className="action-item" onClick={handleFavorite}>
+                    <HeartOutlined />
+                    <span className="action-count">{videoData?.favoriteCount || 0}</span>
+                </div>
+                <div className="action-item" onClick={() => setShowCommentDrawer(true)}>
+                    <CommentOutlined />
+                    <span className="action-count">{commentData?.length || 0}</span>
+                </div>
+                <div className="action-item">
+                    <ShareAltOutlined />
+                    <span className="action-count">分享</span>
+                </div>
+            </div>
+
+            <div className='video-desc'>
+                <div className='author-info'>
+                    <Avatar size={40} icon={<UserOutlined />} />
+                    <div className='author-detail'>
+                        <div className='author-name'>{videoData?.username || '用户名'}</div>
+                        <div className='publish-time'>{new Date(videoData?.createTime).toLocaleDateString()}</div>
                     </div>
-                    <div className="video-actions">
-                        <div className="action-item">
-                            <PlayCircleOutlined className="text-blue" />
-                            <span>播放量: {videoData.playCount}</span>
-                        </div>
-                        <div className="action-item" onClick={handleLike}>
-                            <LikeOutlined className="text-yellow" />
-                            <span>{videoData.likeCount}</span>
-                        </div>
-                        <div className="action-item" onClick={handleFavorite}>
-                            <HeartOutlined className="text-red" />
-                            <span>{videoData.favoriteCount}</span>
-                        </div>
+                </div>
+                <div className='video-info-content'>
+                    <div className='video-desc-title'>
+                        {videoData?.title}
+                    </div>
+                    <div className='video-desc-content'>
+                        {videoData?.description}
+                    </div>
+                    <div className='video-tags'>
+                        {videoData?.tags === 0 && <span className='tag'>AI生成</span>}
+                        <span className='tag'>视频</span>
                     </div>
                 </div>
             </div>
-            <Modal
-                title="回复评论"
-                open={showReplyModal}
-                onOk={() => {
-                    if (!replyContent.trim()) {
-                        message.error('回复内容不能为空');
-                        return;
-                    }
-                    sendComment({ content: replyContent }, replyingTo);
-                    setShowReplyModal(false);
-                    setReplyContent('');
-                    setReplyingTo(null);
-                }}
-                onCancel={() => {
-                    setShowReplyModal(false);
-                    setReplyContent('');
-                    setReplyingTo(null);
-                }}
+
+            <Drawer
+                title="评论"
+                placement="right"
+                width={400}
+                onClose={() => setShowCommentDrawer(false)}
+                open={showCommentDrawer}
+                className="comment-drawer"
             >
-                <Input.TextArea
-                    rows={4}
-                    value={replyContent}
-                    onChange={(e) => setReplyContent(e.target.value)}
-                    placeholder="请输入回复内容"
-                />
-            </Modal>
-            {/* 右半边 - 评论相关 */}
-            <div className="right-panel">
                 <div className="comments-section">
-                    <h2>评论</h2>
                     <div className="comment-form">
                         <Form onFinish={(values) => sendComment(values, null)}>
-                            <Form.Item name="content" className='comment-form-item'>
-                                <Input.TextArea rows={2} placeholder="写下你的评论..." />
+                            <Form.Item name="content" className="comment-form-item">
+                                <Input.TextArea 
+                                    rows={3} 
+                                    placeholder="写下你的评论..." 
+                                    bordered={false}
+                                />
                             </Form.Item>
-                            <div className='send-comment-btn'><Button type="primary" htmlType="submit">提交评论</Button></div>
+                            <Button type="primary" htmlType="submit" className="submit-btn">
+                                发送
+                            </Button>
                         </Form>
                     </div>
                     <div className="comments-list">
                         {commentData && renderComments(commentData)}
                     </div>
                 </div>
-            </div>
+            </Drawer>
         </div>
     );
 };

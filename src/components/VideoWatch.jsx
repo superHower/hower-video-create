@@ -56,10 +56,9 @@ const VideoWatch = ({
   }, [src]);
 
   return (
-    <Card
+    <div
       className={className}
       style={{
-        padding: '10px',
         borderRadius: '8px',
         ...style
       }}
@@ -79,7 +78,7 @@ const VideoWatch = ({
           }}
         />
       </div>
-    </Card>
+    </div>
   );
 };
 

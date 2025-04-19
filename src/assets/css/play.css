@@ -25,17 +25,299 @@
 
 
 
-.video-wrapper {
+.douyin-container {
   position: relative;
-  padding-bottom: 56.25%; /* 16:9 */
-  height: 0;
+  top: 64px;
+  width: 100%;
+  height: calc(100vh - 64px);
+  background: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
+.video-section {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.video-section .side {
+  width: 20%;
+  height: 100%;
+  background-color: #141414;
+}
+@media (max-width: 1200px) {
+  .video-section .side {
+    width: 15%;
+  }
+  .video-desc {
+    left: 15% !important;
+  }
+  .video-player {
+    width: 70% !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .video-section .side {
+    width: 10%;
+  }
+  .video-desc {
+    left: 10% !important;
+  }
+  .video-player {
+    width: 80% !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .video-section .side {
+    width: 5%;
+  }
+  .video-desc {
+    left: 5% !important;
+  }
+  .video-player {
+    width: 90% !important;
+  }
+}
+
+.video-wrapper video {
+    max-height: 100vh;
+    max-width: 100%;
+    object-fit: contain;
+}
+
+.video-info {
+    position: absolute;
+    bottom: 80px;
+    left: 20px;
+    color: #fff;
+    z-index: 10;
+}
+
+.video-title {
+    font-size: 16px;
+    margin: 0;
+    max-width: 80%;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+.video-desc {
+    position: fixed;
+    bottom: 64px;
+    left: 20%;
+    color: #fff;
+    max-width: 500px;
+    z-index: 10;
+    margin-left: 8px;
+}
+
+.author-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.author-detail {
+    display: flex;
+    flex-direction: column;
+}
+
+.author-name {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.publish-time {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.video-info-content {
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(8px);
+    padding: 12px;
+    border-radius: 8px;
+}
+
+.video-desc-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.video-desc-content {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 12px;
+    line-height: 1.5;
+}
+
+.video-tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.video-tags .tag {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    color: #fff;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .video-desc {
+        bottom: 80px;
+        left: 16px;
+        max-width: 80%;
+    }
+    
+    .video-desc-title {
+        font-size: 14px;
+    }
+    
+    .video-desc-content {
+        font-size: 12px;
+    }
+}
+.action-bar {
+    position: fixed;
+    right: 60px;
+    bottom: 210px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    z-index: 100;
+}
+
+.action-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #fff;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.action-item:hover {
+    transform: scale(1.1);
+}
+
+.action-item .anticon {
+    font-size: 28px;
+    margin-bottom: 4px;
+}
+
+.action-count {
+    font-size: 12px;
+    color: #fff;
+}
+
+.comment-drawer .ant-drawer-content-wrapper {
+    background: #1a1a1a;
+}
+
+.comment-drawer .ant-drawer-header {
+    background: #1a1a1a;
+    border-bottom: 1px solid #333;
+}
+
+.comment-drawer .ant-drawer-title {
+    color: #fff;
+}
+
+.comment-drawer .ant-drawer-close {
+    color: #fff;
+}
+
+.comments-section {
+    padding: 16px;
+}
+
+.comment-form {
+    margin-bottom: 20px;
+    background: #262626;
+    border-radius: 8px;
+    padding: 12px;
+}
+
+.comment-form-item {
+    margin-bottom: 12px;
+}
+
+.comment-form-item .ant-input {
+    background: transparent;
+    color: #fff;
+}
+
+.submit-btn {
+    float: right;
+}
+
+.comment-item {
+    display: flex;
+    gap: 12px;
+    padding: 16px 0;
+    border-bottom: 1px solid #333;
+}
+
+.comment-content-wrapper {
+    flex: 1;
+}
+
+.username {
+    color: #fff;
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+.comment-content {
+    color: #fff;
+    margin-bottom: 8px;
+}
+
+.comment-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #666;
+    font-size: 12px;
+}
+
+.comment-replies {
+    margin-left: 24px;
+    margin-top: 12px;
+}
+
+.comment-time {
+    color: #666;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .action-bar {
+        right: 30px;
+    }
+    
+    .video-info {
+        left: 10px;
+        bottom: 60px;
+    }
+}
 .video-player {
-  position: absolute;
+  position: relative;
   top: 0;
   left: 0;
-  width: 100%;
+  width: 60%;
   height: 100%;
 }
 
