@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Row, Col, Card, Spin, Button, Empty } from 'antd';
-import { CheckCircleOutlined, TagsOutlined, HeartOutlined, PlayCircleOutlined, LikeOutlined, StarOutlined } from '@ant-design/icons';
+import { Row, Col, Card, Spin, Button, Avatar, Empty, Tabs } from 'antd';  // 添加 Tabs
+import { CheckCircleOutlined, TagsOutlined, HeartOutlined, UserOutlined, PlayCircleOutlined, LikeOutlined, StarOutlined } from '@ant-design/icons';
 import { post, get } from '../utils/request';
 import { useNavigate } from 'react-router-dom';
 import '../assets/css/videolist.css';
@@ -35,7 +35,57 @@ const VideoList = ({ getListParams, isHome }) => {
     };
 
     return (
-        <div style={{ marginTop: '64px', padding: '24px' }}>
+        <div className='list-container'>
+            {isHom ? (
+                <div className='home-nav'>
+                    <Tabs
+                        defaultActiveKey="1"
+                        items={[
+                            { key: '1', label: '推荐' },
+                            { key: '2', label: '关注' },
+                            { key: '3', label: '热门' },
+                            { key: '4', label: '直播' },
+                            { key: '5', label: '影视' },
+                            { key: '6', label: '游戏' },
+                            { key: '7', label: '动漫' },
+                        ]}
+                    />
+                </div>
+            ) : (
+                <div className='user-show-container'>
+                    <div className='user-info'>
+                        <div className='user-avatar'>
+                            <Avatar size={80} icon={<UserOutlined />} />
+                        </div>
+                        <div className='user-details'>
+                            <h2 className='username'>@{videoList[0]?.accountUsername || '用户名'}</h2>
+                            <div className='user-stats'>
+                                <div className='stat-item'>
+                                    <div className='stat-value'>{videoList.length}</div>
+                                    <div className='stat-label'>作品</div>
+                                </div>
+                                <div className='stat-item'>
+                                    <div className='stat-value'>0</div>
+                                    <div className='stat-label'>获赞</div>
+                                </div>
+                                <div className='stat-item'>
+                                    <div className='stat-value'>0</div>
+                                    <div className='stat-label'>粉丝</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <Tabs
+                        defaultActiveKey="works"
+                        items={[
+                            { key: 'works', label: '作品' },
+                            { key: 'likes', label: '喜欢' },
+                            { key: 'collected', label: '收藏' },
+                        ]}
+                    />
+                </div>
+            )}
+            
             <Spin spinning={loading} tip="加载中">
                 {videoList.length === 0 ? (
                     <Empty
