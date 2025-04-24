@@ -6,17 +6,26 @@ import { useNavigate } from 'react-router-dom';
 import '../assets/css/videolist.css';
 import defaultImage from '../assets/image/empty-box.png';  // 添加默认图片导入
 import { formatDuration } from '../utils/inedx';
-const { Meta } = Card;
 
 const VideoList = ({ getListParams, isHome }) => {
     const [videoList, setVideoList] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [isHom, setIsHom] = useState(false)
+    const [userInfo, setUserInfo] = useState({})
+
     const navigate = useNavigate();
-    const getVideoList = async () => {
+    const getVideoList = async (type: number) => {
+        setLoading(true);
+        getListParams.type = type;
         try {
             const response: any = await post('/admin/video/list', getListParams);
             setVideoList(response.result.data);
+            if(getListParams.type == '0') {
+                setUserInfo({
+                    worksNum: response.result.data.length,
+                    likesNum: response.result.data.reduce((total, video) => total + (video.likeCount || 0), 0)
+                })
+            }
         } catch (error) {
             console.error('获取视频列表失败:', error);
         } finally {
@@ -26,13 +35,28 @@ const VideoList = ({ getListParams, isHome }) => {
 
     useEffect(() => {
         setIsHom(isHome);
-        getVideoList();
+        getVideoList(0);
     }, [getListParams]);
 
     const handleCardClick = async (id) => {
         await post('/admin/video/play', { videoId: id });
         navigate(`/play?id=${id}`);
     };
+
+    const onTabChange = (key) => {
+        // 根据 key 切换不同的视频列表
+        switch (key) {
+            case 'works':
+                getVideoList(0);
+                break;  
+            case 'likes':
+                getVideoList(1);
+                break;
+            case 'collected':
+                getVideoList(2);
+                break;
+        }   
+    }
 
     return (
         <div className='list-container'>
@@ -61,17 +85,17 @@ const VideoList = ({ getListParams, isHome }) => {
                             <h2 className='username'>@{videoList[0]?.accountUsername || '用户名'}</h2>
                             <div className='user-stats'>
                                 <div className='stat-item'>
-                                    <div className='stat-value'>{videoList.length}</div>
+                                    <div className='stat-value'>{userInfo['worksNum']}</div>
                                     <div className='stat-label'>作品</div>
                                 </div>
                                 <div className='stat-item'>
-                                    <div className='stat-value'>0</div>
+                                    <div className='stat-value'>{userInfo['likesNum']}</div>
                                     <div className='stat-label'>获赞</div>
                                 </div>
-                                <div className='stat-item'>
+                                {/* <div className='stat-item'>
                                     <div className='stat-value'>0</div>
                                     <div className='stat-label'>粉丝</div>
-                                </div>
+                                </div> */}
                             </div>
                         </div>
                     </div>
@@ -82,6 +106,7 @@ const VideoList = ({ getListParams, isHome }) => {
                             { key: 'likes', label: '喜欢' },
                             { key: 'collected', label: '收藏' },
                         ]}
+                        onChange={onTabChange}
                     />
                 </div>
             )}
@@ -157,5 +182,4 @@ const VideoList = ({ getListParams, isHome }) => {
         </div>
     );
 };
-
 export default VideoList;
