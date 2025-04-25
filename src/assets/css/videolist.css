@@ -208,6 +208,7 @@
 }
 
 .home-nav .ant-tabs {
+    width: 75%;
     line-height: 0.56;
 }
 
@@ -329,5 +330,60 @@
     .user-show-container .ant-tabs-tab {
         padding: 12px 16px;
         font-size: 14px;
+    }
+}
+
+.nav-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 16px;
+}
+
+.search-container {
+    width: 25%;
+    padding: 0 8px;
+}
+
+.search-container .ant-btn-primary {
+    margin-top: 0 !important;
+}
+
+.search-input {
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.search-input .ant-input {
+    background: transparent;
+    color: #fff;
+}
+
+.search-input .ant-input-search-button {
+    border-radius: 0 20px 20px 0;
+    background: #ff2c55;
+    border-color: #ff2c55;
+}
+
+.search-input .ant-input-search-button:hover {
+    background: #ff4d6d;
+    border-color: #ff4d6d;
+}
+
+@media (max-width: 768px) {
+    .nav-wrapper {
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .home-nav .ant-tabs {
+        width: 100%;
+        padding: 0;
+
+    }
+
+    .search-container {
+        width: 100%;
+        padding: 0;
     }
 }

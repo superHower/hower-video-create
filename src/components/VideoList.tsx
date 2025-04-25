@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Row, Col, Card, Spin, Button, Avatar, Empty, Tabs } from 'antd';  // 添加 Tabs
-import { CheckCircleOutlined, TagsOutlined, HeartOutlined, UserOutlined, PlayCircleOutlined, LikeOutlined, StarOutlined } from '@ant-design/icons';
+import { Row, Col, Card, Spin, Button, Avatar, Empty, Tabs, Input } from 'antd';  // 添加 Tabs
+import { CheckCircleOutlined, TagsOutlined, HeartOutlined, UserOutlined, PlayCircleOutlined, LikeOutlined, StarOutlined, SearchOutlined } from '@ant-design/icons';  // 添加 SearchOutlined
 import { post, get } from '../utils/request';
 import { useNavigate } from 'react-router-dom';
 import '../assets/css/videolist.css';
@@ -12,6 +12,7 @@ const VideoList = ({ getListParams, isHome }) => {
     const [loading, setLoading] = useState(false);
     const [isHom, setIsHom] = useState(false)
     const [userInfo, setUserInfo] = useState({})
+    const [searchText, setSearchText] = useState('');
 
     const navList = [
         { key: 'A', label: '全部' },
@@ -33,6 +34,7 @@ const VideoList = ({ getListParams, isHome }) => {
         setLoading(true);
         getListParams.type = type;
         getListParams.isHot = false;
+        getListParams.title = searchText || null;  // 添加搜索关键词
         if(tags) {
             if (tags == 'R') getListParams.isHot = true;
             else getListParams.tags = tags;
@@ -81,24 +83,42 @@ const VideoList = ({ getListParams, isHome }) => {
         }   
     }
 
+    const handleSearch = (value) => {
+        setSearchText(value);
+        getVideoList(getListParams.type || 0);
+    };
+
     return (
         <div className='list-container'>
             {isHom ? (
-                <div className='home-nav'>
-                    <Tabs
-                        defaultActiveKey="A"
-                        items={navList}
-                        onChange={(key) => {
-                            if (key === 'A') {
-                                getVideoList(0);
-                            } else if (key === 'R') {
-                                getVideoList(0, 'R');
-                            } else {
-                                getVideoList(0, `${key}`);
-                            }
-                        }}
-                    />
-                </div>
+                <>
+                    <div className='home-nav'>
+                        <div className="nav-wrapper">
+                            <Tabs
+                                defaultActiveKey="A"
+                                items={navList}
+                                onChange={(key) => {
+                                    if (key === 'A') {
+                                        getVideoList(0);
+                                    } else if (key === 'R') {
+                                        getVideoList(0, 'R');
+                                    } else {
+                                        getVideoList(0, `${key}`);
+                                    }
+                                }}
+                            />
+                            <div className="search-container">
+                                <Input.Search
+                                    placeholder="搜索视频"
+                                    allowClear
+                                    enterButton={<SearchOutlined />}
+                                    onSearch={handleSearch}
+                                    className="search-input"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </>
             ) : (
                 <div className='user-show-container'>
                     <div className='user-info'>
