@@ -212,7 +212,15 @@ const VideoList = ({ getListParams, isHome }) => {
                                         <div className="video-content">
                                             <h3 className="video-title">{video.title}</h3>
                                             <div className="video-author">
-                                                <div>@ {video.accountUsername}</div>
+                                                <div 
+                                                    className="author-name"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        navigate(`/my/${video.accountId}`);
+                                                    }}
+                                                >
+                                                    @ {video.accountUsername}
+                                                </div>
                                                 <div>{video.updatedAt.substring(5, 10)}</div>
                                             </div>
                                         </div>

@@ -7,8 +7,13 @@ const UserMenu = () => {
 
   const { username, accountType } = JSON.parse(localStorage.getItem('user') ? localStorage.getItem('user') : '{}')
   
-
   const items = [
+    {
+      key: 'profile',
+      label: '个人主页',
+      icon: <UserOutlined />,
+      onClick: () => navigator('/my')
+    },
     {
       key: 'logout',
       label: '退出登录',

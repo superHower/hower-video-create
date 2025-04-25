@@ -13,16 +13,14 @@ export const routerMap = [
   },
   {
     path: "/",
-    element: (
-      <Layout />
-    ),
+    element: <Layout />,
     children: [
       {
         path: "/home",
         element: <Home />,
       },
       {
-        path: "/my",
+        path: "/my/:id?",
         element: <MyWork />,
       },
       {

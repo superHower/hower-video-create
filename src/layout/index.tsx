@@ -24,17 +24,6 @@ export default function AntdLayout() {
       label: "创作",
       icon: <VideoCameraOutlined />
     },
-    { 
-      key: "my", 
-      label: "我的",
-      icon: <UserOutlined />
-    },
-    { 
-      key: "play", 
-      label: "播放",
-      icon: <PlayCircleOutlined />,
-      style: { display: 'none' }  // 隐藏播放标签，但保持路由功能
-    }
   ];
 
   return (

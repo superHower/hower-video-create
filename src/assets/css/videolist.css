@@ -37,6 +37,14 @@
 
 .video-author {
     font-size: 14px;  /* 增加作者信息字体大小 */
+    .author-name {
+        cursor: pointer;
+        color: #666;
+    }
+    
+    .author-name:hover {
+        color: #ff2c55;
+    }
 }
 
 .video-card-container:hover {

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, memo, useRef } from 'react';
 import { Form, Button, Input, Drawer, message, Avatar, Modal } from 'antd';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { post, get } from '../utils/request';
 import VideoWatch from '../components/VideoWatch';
 import { 
@@ -191,6 +191,13 @@ const Play = () => {
         ));
     };
 
+    const navigate = useNavigate();
+    const handleAvatar = () => {
+        if (videoData?.accountId) {
+            navigate(`/my/${videoData.accountId}`);
+        }
+    };
+
     return (
         <div className="douyin-container">
             <div className="video-section">
@@ -200,7 +207,7 @@ const Play = () => {
             </div>
 
             <div className="action-bar">
-                <div className="action-item" onClick={handleLike}>
+                <div className="action-item" onClick={handleAvatar}>
                     <Avatar size={40} icon={<UserOutlined />} />
                 </div>
                 <div className="action-item" onClick={handleLike}>
