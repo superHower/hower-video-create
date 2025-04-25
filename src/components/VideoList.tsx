@@ -13,10 +13,33 @@ const VideoList = ({ getListParams, isHome }) => {
     const [isHom, setIsHom] = useState(false)
     const [userInfo, setUserInfo] = useState({})
 
+    const navList = [
+        { key: 'A', label: '全部' },
+        { key: 'R', label: '热门' },
+        { key: '0', label: '音乐' },
+        { key: '1', label: '美食' },
+        { key: '2', label: '游戏' },
+        { key: '3', label: '影视' },
+        { key: '4', label: '知识' },
+        { key: '5', label: '体育' },
+        { key: '6', label: '旅行' },
+        { key: '7', label: '亲子' },
+        { key: '8', label: '美妆' },
+        { key: '9', label: '其他' },
+    ]
+
     const navigate = useNavigate();
-    const getVideoList = async (type: number) => {
+    const getVideoList = async (type: number, tags?: string) => {
         setLoading(true);
         getListParams.type = type;
+        getListParams.isHot = false;
+        if(tags) {
+            if (tags == 'R') getListParams.isHot = true;
+            else getListParams.tags = tags;
+        }else {
+            getListParams.tags = null;
+        }
+  
         try {
             const response: any = await post('/admin/video/list', getListParams);
             setVideoList(response.result.data);
@@ -63,16 +86,17 @@ const VideoList = ({ getListParams, isHome }) => {
             {isHom ? (
                 <div className='home-nav'>
                     <Tabs
-                        defaultActiveKey="1"
-                        items={[
-                            { key: '1', label: '推荐' },
-                            { key: '2', label: '关注' },
-                            { key: '3', label: '热门' },
-                            { key: '4', label: '直播' },
-                            { key: '5', label: '影视' },
-                            { key: '6', label: '游戏' },
-                            { key: '7', label: '动漫' },
-                        ]}
+                        defaultActiveKey="A"
+                        items={navList}
+                        onChange={(key) => {
+                            if (key === 'A') {
+                                getVideoList(0);
+                            } else if (key === 'R') {
+                                getVideoList(0, 'R');
+                            } else {
+                                getVideoList(0, `${key}`);
+                            }
+                        }}
                     />
                 </div>
             ) : (

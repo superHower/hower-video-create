@@ -221,6 +221,10 @@
     padding: 12px 24px;
 }
 
+.home-nav .ant-tabs-nav-more {
+    color: #ffffff !important;
+}
+
 .home-nav .ant-tabs-tab:hover {
     color: #fff;
 }
@@ -233,6 +237,9 @@
     background: #ff2c55;
 }
 
+.home-nav .ant-tabs-tab+.ant-tabs-tab {
+    margin: 0 0 0 8px;
+}
 .user-show-container {
     margin-bottom: 24px;
     border-bottom: 1px solid #2f2f2f;
