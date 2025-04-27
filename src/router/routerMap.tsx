@@ -6,6 +6,7 @@ import TTV from "../pages/TTV";
 import MyWork from "../pages/MyWork";
 import Play from "../pages/play";
 import Home from "../pages/home";
+import EditProfile from "../pages/EditProfile";
 export const routerMap = [
   {
     path: "/login",
@@ -31,6 +32,10 @@ export const routerMap = [
         path: "/ttv",
         element: <TTV />,
       },
+      {
+        path: "/edit-profile",
+        element: <EditProfile />,
+    }
     ],
   },
   {

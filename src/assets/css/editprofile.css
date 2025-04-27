@@ -1,0 +1,85 @@
+.edit-profile-container {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 30px;
+  background: #1f1f1f;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.edit-profile-title {
+  color: #fff;
+  font-size: 24px;
+  margin-bottom: 30px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.avatar-upload {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.avatar-upload .ant-upload {
+  border: 2px dashed rgba(255, 44, 85, 0.3);
+  border-radius: 50%;
+  background: rgba(255, 44, 85, 0.05);
+  transition: all 0.3s;
+}
+
+.avatar-upload .ant-upload:hover {
+  border-color: #ff2c55;
+}
+
+.edit-profile-form .ant-form-item-label > label {
+  color: #fff;
+  font-size: 15px;
+}
+
+.edit-profile-form .ant-input,
+.edit-profile-form .ant-input-number,
+.edit-profile-form .ant-input-textarea {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: #fff;
+  border-radius: 8px;
+}
+
+.edit-profile-form .ant-input:focus,
+.edit-profile-form .ant-input-number:focus,
+.edit-profile-form .ant-input-textarea:focus {
+  box-shadow: 0 0 0 2px rgba(255, 44, 85, 0.2);
+}
+
+.edit-profile-form .ant-radio-wrapper {
+  color: #fff;
+}
+
+.edit-profile-form .ant-radio-checked .ant-radio-inner {
+  border-color: #ff2c55;
+  background-color: #ff2c55;
+}
+
+.edit-profile-form .ant-btn-primary {
+  background: #ff2c55;
+  border: none;
+  height: 45px;
+  font-size: 16px;
+  margin-top: 20px;
+}
+
+.edit-profile-form .ant-btn-primary:hover {
+  background: #ff4d6d;
+}
+
+.edit-profile-form .ant-input-prefix {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.edit-profile-form .ant-form-item {
+  margin-bottom: 24px;
+}
+
+.edit-profile-form .ant-input-number-input {
+  color: #ffffff
+}

@@ -21,6 +21,7 @@ const Login = () => {
     return Promise.resolve();
   };
   // 验证规则
+  // 在 rules 对象中添加确认密码的验证规则
   const rules = {
     username: [
       { required: true, message: '请输入用户名' },
@@ -29,6 +30,17 @@ const Login = () => {
     password: [
       { required: true, message: '请输入密码' },
       { validator: validatePassword }
+    ],
+    confirmPassword: [
+      { required: true, message: '请确认密码' },
+      ({ getFieldValue }) => ({
+        validator(_, value) {
+          if (!value || getFieldValue('password') === value) {
+            return Promise.resolve();
+          }
+          return Promise.reject(new Error('两次输入的密码不一致'));
+        },
+      }),
     ],
     captcha: [
       { required: true, message: '请输入验证码' },
@@ -177,6 +189,7 @@ const Login = () => {
         </div>
       </div>
 
+      // 在 Modal 中的注册表单添加确认密码字段
       <Modal 
         title="用户注册" 
         open={isRegisterModalVisible} 
@@ -197,6 +210,16 @@ const Login = () => {
           <Form.Item name="password" rules={rules.password}>
             <Input.Password 
               placeholder="请输入密码" 
+              size="large"
+              prefix={<LockOutlined />}
+              iconRender={(visible) => visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />}
+              className="custom-input"
+            />
+          </Form.Item>
+      
+          <Form.Item name="confirmPassword" rules={rules.confirmPassword}>
+            <Input.Password 
+              placeholder="请确认密码" 
               size="large"
               prefix={<LockOutlined />}
               iconRender={(visible) => visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />}
