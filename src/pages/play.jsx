@@ -208,7 +208,10 @@ const Play = () => {
 
             <div className="action-bar">
                 <div className="action-item" onClick={handleAvatar}>
-                    <Avatar size={40} icon={<UserOutlined />} />
+                    <Avatar 
+                        size={40} 
+                        src={videoData?.accountAvatar || ''} 
+                    />
                 </div>
                 <div className="action-item" onClick={handleLike}>
                     {videoData?.isLiked ? (
@@ -238,7 +241,7 @@ const Play = () => {
 
             <div className='video-desc'>
                 <div className='author-info'>
-                    <div className='author-name'>@ {videoData?.accountUsername}</div>
+                    <div className='author-name'>@ {videoData?.accountNickname || videoData?.accountUsername}</div>
                     <div className='publish-time'>{new Date(videoData?.updatedAt).toLocaleDateString()}</div>
                 </div>
                 <div className='video-info-content'>

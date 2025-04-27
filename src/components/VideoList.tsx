@@ -123,10 +123,10 @@ const VideoList = ({ getListParams, isHome }) => {
                 <div className='user-show-container'>
                     <div className='user-info'>
                         <div className='user-avatar'>
-                            <Avatar size={80} icon={<UserOutlined />} />
+                            <Avatar size={80} src={videoList[0]?.accountAvatar || ''} />
                         </div>
                         <div className='user-details'>
-                            <h2 className='username'>@{videoList[0]?.accountUsername || '用户名'}</h2>
+                            <h2 className='username'>@{videoList[0]?.accountNickname || videoList[0]?.accountUsername}</h2>
                             <div className='user-stats'>
                                 <div className='stat-item'>
                                     <div className='stat-value'>{userInfo['worksNum']}</div>
@@ -219,7 +219,7 @@ const VideoList = ({ getListParams, isHome }) => {
                                                         navigate(`/my/${video.accountId}`);
                                                     }}
                                                 >
-                                                    @ {video.accountUsername}
+                                                    @ {video.accountNickname || video.accountUsername}
                                                 </div>
                                                 <div>{video.updatedAt.substring(5, 10)}</div>
                                             </div>
