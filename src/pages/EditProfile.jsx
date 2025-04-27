@@ -92,15 +92,27 @@ const EditProfile = () => {
         avatar: avatarUrl || undefined
       };
 
-      // 如果输入了新密码，则添加到提交数据中
       if (password) {
         submitData.password = password;
       }
 
       await put(`/admin/account/${id}`, submitData);
+      
+      // 更新本地存储
+      const userInfo = JSON.parse(localStorage.getItem('user') || '{}');
+      const newUserInfo = {
+        ...userInfo,
+        avatar: avatarUrl,
+        nickname: values.nickname,
+        username: values.username
+      };
+      localStorage.setItem('user', JSON.stringify(newUserInfo));
+      
+      // 触发自定义事件
+      window.dispatchEvent(new Event('userInfoChange'));
+      
       message.success('更新成功');
       
-      // 如果修改了密码，清空密码字段
       if (password) {
         form.setFieldsValue({
           password: undefined,
@@ -161,7 +173,7 @@ const EditProfile = () => {
           label="用户名"
           rules={[{ required: true, message: '请输入用户名' }]}
         >
-          <Input prefix={<UserOutlined />} placeholder="请输入用户名" />
+          <Input prefix={<UserOutlined />}  />
         </Form.Item>
 
         <Form.Item

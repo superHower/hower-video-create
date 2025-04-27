@@ -69,6 +69,7 @@ const Login = () => {
         return
       }
       localStorage.setItem('user', JSON.stringify(res.result));
+
       message.success('登录成功');
       navigate('/home');
     } catch (error) {

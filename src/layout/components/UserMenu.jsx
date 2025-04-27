@@ -1,12 +1,23 @@
 import { Dropdown, Avatar, Space } from 'antd';
 import { UserOutlined, LogoutOutlined, EditOutlined } from '@ant-design/icons';
 import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from 'react';
 
 const UserMenu = () => {
   const navigator = useNavigate();
-
-  const { username, accountType, id } = JSON.parse(localStorage.getItem('user') ? localStorage.getItem('user') : '{}')
+  const [userInfo, setUserInfo] = useState(() => JSON.parse(localStorage.getItem('user') || '{}'));
   
+  useEffect(() => {
+    const handleUserInfoChange = () => {
+      setUserInfo(JSON.parse(localStorage.getItem('user') || '{}'));
+    };
+
+    window.addEventListener('userInfoChange', handleUserInfoChange);
+    return () => window.removeEventListener('userInfoChange', handleUserInfoChange);
+  }, []);
+
+  const { username, avatar, nickname } = userInfo;
+
   const items = [
     {
       key: 'profile',
@@ -35,8 +46,12 @@ const UserMenu = () => {
     <Dropdown menu={{ items }} trigger={['click']}>
       <a onClick={(e) => e.preventDefault()} className="user-menu-trigger">
         <Space>
-          <Avatar icon={<UserOutlined />} style={{ background: '#ff2c55' }} />
-          <span style={{ color: '#fff' }}>{username}</span>
+          <Avatar 
+            src={avatar} 
+            icon={!avatar && <UserOutlined />} 
+            style={{ background: '#ff2c55' }} 
+          />
+          <span style={{ color: '#fff' }}>{nickname || username}</span>
         </Space>
       </a>
     </Dropdown>
