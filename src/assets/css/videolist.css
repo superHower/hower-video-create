@@ -395,3 +395,28 @@
         padding: 0;
     }
 }
+
+.user-bio {
+    margin: 10px 0;
+    color: #999;
+}
+
+.bio-text {
+    font-size: 14px;
+    margin-bottom: 8px;
+    white-space: pre-wrap;
+    line-height: 1.5;
+}
+
+.user-extra-info {
+    font-size: 13px;
+}
+
+.info-item {
+    margin-right: 15px;
+    color: #666;
+}
+
+.info-item:last-child {
+    margin-right: 0;
+}

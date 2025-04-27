@@ -10,9 +10,10 @@ import { formatDuration } from '../utils/inedx';
 const VideoList = ({ getListParams, isHome }) => {
     const [videoList, setVideoList] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [isHom, setIsHom] = useState(false)
-    const [userInfo, setUserInfo] = useState({})
+    const [isHom, setIsHom] = useState(false);
+    const [userInfo, setUserInfo] = useState({});
     const [searchText, setSearchText] = useState('');
+    const [accountInfo, setAccountInfo] = useState(null);  // 新增用户详细信息状态
 
     const navList = [
         { key: 'A', label: '全部' },
@@ -58,10 +59,27 @@ const VideoList = ({ getListParams, isHome }) => {
         }
     };
 
+    // 获取用户详细信息
+    const fetchAccountInfo = async (accountId) => {
+        try {
+            const response = await get(`/admin/account/${accountId}`);
+            setAccountInfo(response);
+        } catch (error) {
+            console.error('获取用户信息失败:', error);
+        }
+    };
+
     useEffect(() => {
         setIsHom(isHome);
         getVideoList(0);
     }, [getListParams]);
+
+    // 添加新的 useEffect 监听视频列表变化
+    useEffect(() => {
+        if (!isHom && videoList.length > 0) {
+            fetchAccountInfo(videoList[0].accountId);
+        }
+    }, [isHom, videoList]);
 
     const handleCardClick = async (id) => {
         await post('/admin/video/play', { videoId: id });
@@ -123,10 +141,26 @@ const VideoList = ({ getListParams, isHome }) => {
                 <div className='user-show-container'>
                     <div className='user-info'>
                         <div className='user-avatar'>
-                            <Avatar size={80} src={videoList[0]?.accountAvatar || ''} />
+                            <Avatar size={80} src={accountInfo?.avatar || ''} />
                         </div>
                         <div className='user-details'>
-                            <h2 className='username'>@{videoList[0]?.accountNickname || videoList[0]?.accountUsername}</h2>
+                            <h2 className='username'>@{accountInfo?.nickname || accountInfo?.username}</h2>
+                            <div className='user-bio'>
+                                {accountInfo?.info && (
+                                    <div className='bio-text'>{accountInfo.info}</div>
+                                )}
+                                <div className='user-extra-info'>
+                                    {accountInfo?.gender !== undefined && (
+                                        <span className='info-item'>
+                                            {accountInfo.gender === 1 ? '男' : 
+                                             accountInfo.gender === 2 ? '女' : '保密'}
+                                        </span>
+                                    )}
+                                    {accountInfo?.age && (
+                                        <span className='info-item'>{accountInfo.age}岁</span>
+                                    )}
+                                </div>
+                            </div>
                             <div className='user-stats'>
                                 <div className='stat-item'>
                                     <div className='stat-value'>{userInfo['worksNum']}</div>
@@ -136,10 +170,6 @@ const VideoList = ({ getListParams, isHome }) => {
                                     <div className='stat-value'>{userInfo['likesNum']}</div>
                                     <div className='stat-label'>获赞</div>
                                 </div>
-                                {/* <div className='stat-item'>
-                                    <div className='stat-value'>0</div>
-                                    <div className='stat-label'>粉丝</div>
-                                </div> */}
                             </div>
                         </div>
                     </div>
