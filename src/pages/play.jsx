@@ -87,18 +87,25 @@ const Play = () => {
 
                 newSocket.on('new-comment', (newComment) => {
                     console.log('新评论:', newComment);
-                  setCommentData(prev => {
-                    // 处理嵌套回复
-                    if (newComment.parentId) {
-                      const updated = prev.map(comment => 
-                        comment.id === newComment.parentId 
-                          ? { ...comment, replies: [...comment.replies, newComment] }
-                          : comment
-                      );
-                      return updated;
-                    }
-                    return [...prev, newComment];
-                  });
+                    setCommentData(prev => {
+                        // 确保新评论包含完整的用户信息
+                        const commentWithUserInfo = {
+                            ...newComment,
+                            accountAvatar: newComment.accountAvatar || '',
+                            accountNickname: newComment.accountNickname || newComment.username
+                        };
+                        
+                        // 处理嵌套回复
+                        if (commentWithUserInfo.parentId) {
+                            const updated = prev.map(comment => 
+                                comment.id === commentWithUserInfo.parentId 
+                                    ? { ...comment, replies: [...comment.replies, commentWithUserInfo] }
+                                    : comment
+                            );
+                            return updated;
+                        }
+                        return [...prev, commentWithUserInfo];
+                    });
                 });
 
             } catch (err) {
@@ -147,6 +154,29 @@ const Play = () => {
                 content: values.content,
                 parentId: pid || null
             });
+            
+            // 重新获取评论数据
+            const commentResponse = await post('/admin/video/comment/list', { videoId: id });
+            const commentMap = new Map();
+            const datatree = [];
+          
+            commentResponse.result.data.forEach(comment => {
+              comment.replies = [];
+              commentMap.set(comment.id, comment);
+            });
+            
+            commentResponse.result.data.forEach(comment => {
+              if (comment.parentId) {
+                const parentComment = commentMap.get(comment.parentId);
+                if (parentComment) {
+                  parentComment.replies.push(comment);
+                }
+              } else {
+                  datatree.push(comment);
+              }
+            });
+            
+            setCommentData(datatree);
             message.success('评论成功');
         } catch (err) {
             message.error('评论失败');
@@ -154,9 +184,9 @@ const Play = () => {
     }
     const Comment = memo(({ comment }) => (
         <div className="comment-item">
-            <Avatar icon={<UserOutlined />} />
+            <Avatar src={comment?.accountAvatar || ''} />
             <div className="comment-content-wrapper">
-                <div className="username">{comment.username}</div>
+                <div className="username">{comment.accountNickname || comment.username}</div>
                 <div className="comment-content">{comment.content}</div>
                 <div className="comment-footer">
                     <span className="comment-time">
