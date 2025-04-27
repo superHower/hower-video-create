@@ -65,18 +65,48 @@ const EditProfile = () => {
     }
   };
 
+  // 添加密码验证规则
+  const validatePassword = (_, value) => {
+    if (value && value.length < 6) {
+      return Promise.reject('密码长度至少6位');
+    }
+    return Promise.resolve();
+  };
+
+  // 确认密码验证
+  const validateConfirmPassword = (_, value) => {
+    const password = form.getFieldValue('password');
+    if (value && password && value !== password) {
+      return Promise.reject('两次输入的密码不一致');
+    }
+    return Promise.resolve();
+  };
+
   const onFinish = async (values) => {
-    debugger
     setLoading(true);
     try {
+      const { password, confirmPassword, ...otherValues } = values;
       const submitData = {
-        ...values,
+        ...otherValues,
         id,
         avatar: avatarUrl || undefined
       };
 
+      // 如果输入了新密码，则添加到提交数据中
+      if (password) {
+        submitData.password = password;
+      }
+
       await put(`/admin/account/${id}`, submitData);
       message.success('更新成功');
+      
+      // 如果修改了密码，清空密码字段
+      if (password) {
+        form.setFieldsValue({
+          password: undefined,
+          confirmPassword: undefined
+        });
+      }
     } catch (error) {
       message.error('更新失败');
     } finally {
@@ -86,10 +116,10 @@ const EditProfile = () => {
 
   // 添加文件大小检查函数
   const beforeUpload = (file) => {
-    const maxSize = 2 * 1024 * 1024; // 5MB
+    const maxSize = 10 * 1024 * 1024; // 5MB
     console.log("输出", file.size)
     if (file.size > maxSize) {
-      message.error('图片大小不能超过 2MB');
+      message.error('图片大小不能超过 10MB');
       return false;
     }
     return true;
@@ -119,7 +149,7 @@ const EditProfile = () => {
               ) : (
                 <div>
                   <UploadOutlined />
-                  <div style={{ marginTop: 8 }}>上传头像(不超过2MB)</div>
+                  <div style={{ marginTop: 8 }}>上传头像(不超过10MB)</div>
                 </div>
               )}
             </Upload>
@@ -165,6 +195,23 @@ const EditProfile = () => {
           label="个人简介"
         >
           <Input.TextArea rows={4} placeholder="介绍一下自己吧" />
+        </Form.Item>
+
+        <Form.Item
+          name="password"
+          label="新密码"
+          rules={[{ validator: validatePassword }]}
+        >
+          <Input.Password placeholder="不修改请留空" />
+        </Form.Item>
+
+        <Form.Item
+          name="confirmPassword"
+          label="确认新密码"
+          dependencies={['password']}
+          rules={[{ validator: validateConfirmPassword }]}
+        >
+          <Input.Password placeholder="请再次输入新密码" />
         </Form.Item>
 
         <Form.Item>

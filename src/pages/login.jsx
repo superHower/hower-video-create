@@ -189,7 +189,6 @@ const Login = () => {
         </div>
       </div>
 
-      // 在 Modal 中的注册表单添加确认密码字段
       <Modal 
         title="用户注册" 
         open={isRegisterModalVisible} 
